@@ -1,4 +1,4 @@
-module databasework
+module github.com/2451965602/LMS
 
 go 1.23.6
 

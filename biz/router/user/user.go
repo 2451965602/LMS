@@ -3,8 +3,9 @@
 package user
 
 import (
-	user "github.com/2451965602/LMS/biz/handler/user"
 	"github.com/cloudwego/hertz/pkg/app/server"
+
+	user "github.com/2451965602/LMS/biz/handler/user"
 )
 
 /*
@@ -20,13 +21,13 @@ func Register(r *server.Hertz) {
 	{
 		_user := root.Group("/user", _userMw()...)
 		_user.DELETE("/delete", append(_deleteuserMw(), user.DeleteUser)...)
+		_user.GET("/info", append(_userinfoMw(), user.UserInfo)...)
 		_user.POST("/login", append(_loginMw(), user.Login)...)
 		_user.POST("/register", append(_registerMw(), user.Register)...)
 		_user.PUT("/update", append(_updateuserMw(), user.UpdateUser)...)
 		{
 			_admin := _user.Group("/admin", _adminMw()...)
 			_admin.DELETE("/delete", append(_admindeleteuserMw(), user.AdminDeleteUser)...)
-			_admin.PUT("/status", append(_adminupdateuserstatusMw(), user.AdminUpdateUserStatus)...)
 			_admin.PUT("/update", append(_adminupdateuserMw(), user.AdminUpdateUser)...)
 		}
 	}

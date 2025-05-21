@@ -7,7 +7,6 @@ struct AddBookRequest{
     3: required string status,
     4: required string purchasedate,
     5: required string purchaseprice,
-    6: required string lastcheckout,
 }
 struct AddBookResponse{
     1: model.BaseResp base,
@@ -16,12 +15,10 @@ struct AddBookResponse{
 
 struct UpdateBookRequest{
     1:required i64 book_id,
-    2: optional string ISBN,
-    3: optional string location,
-    4: optional string status,
-    5: optional string purchasedate,
-    6: optional string purchaseprice,
-    7: optional string lastcheckout,
+    2: optional string location,
+    3: optional string status,
+    4: optional string purchasedate,
+    5: optional string purchaseprice,
 }
 struct UpdateBookResponse{
     1: model.BaseResp base,

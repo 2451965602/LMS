@@ -5,9 +5,10 @@ package user
 import (
 	"context"
 
-	user "github.com/2451965602/LMS/biz/model/user"
 	"github.com/cloudwego/hertz/pkg/app"
 	"github.com/cloudwego/hertz/pkg/protocol/consts"
+
+	user "github.com/2451965602/LMS/biz/model/user"
 )
 
 // Register .
@@ -70,6 +71,22 @@ func DeleteUser(ctx context.Context, c *app.RequestContext) {
 	}
 
 	resp := new(user.DeleteUserResponse)
+
+	c.JSON(consts.StatusOK, resp)
+}
+
+// UserInfo .
+// @router /user/info [GET]
+func UserInfo(ctx context.Context, c *app.RequestContext) {
+	var err error
+	var req user.UserInfoRequest
+	err = c.BindAndValidate(&req)
+	if err != nil {
+		c.String(consts.StatusBadRequest, err.Error())
+		return
+	}
+
+	resp := new(user.UserInfoResponse)
 
 	c.JSON(consts.StatusOK, resp)
 }

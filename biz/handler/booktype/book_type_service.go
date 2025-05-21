@@ -5,9 +5,10 @@ package booktype
 import (
 	"context"
 
-	booktype "github.com/2451965602/LMS/biz/model/booktype"
 	"github.com/cloudwego/hertz/pkg/app"
 	"github.com/cloudwego/hertz/pkg/protocol/consts"
+
+	booktype "github.com/2451965602/LMS/biz/model/booktype"
 )
 
 // AddBookType .

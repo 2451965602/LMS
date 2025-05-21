@@ -5,9 +5,10 @@ package book
 import (
 	"context"
 
-	book "github.com/2451965602/LMS/biz/model/book"
 	"github.com/cloudwego/hertz/pkg/app"
 	"github.com/cloudwego/hertz/pkg/protocol/consts"
+
+	book "github.com/2451965602/LMS/biz/model/book"
 )
 
 // AddBook .

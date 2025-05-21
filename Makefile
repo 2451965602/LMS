@@ -83,7 +83,7 @@ fmt:
 # 优化 import 顺序结构
 .PHONY: import
 import:
-	goimports -w -local github.com/west2-online .
+	goimports -w -local github.com/2451965602 .
 
 # 检查可能的错误
 .PHONY: vet
@@ -106,12 +106,8 @@ tidy:
 
 # 一键修正规范并执行代码检查，同时运行 license 检查
 .PHONY: verify
-verify: license vet fmt import lint vulncheck tidy
+verify:  vet fmt import lint vulncheck tidy
 
-# 补齐 license
-.PHONY: license
-license:
-	sh ./hack/add-license.sh
 
 # 手动暴露环境变量
 #export DOMTOK_ENVIRONMENT_STARTED=true

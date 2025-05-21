@@ -3,8 +3,19 @@
 package main
 
 import (
+	"os"
+
 	"github.com/cloudwego/hertz/pkg/app/server"
+	"github.com/cloudwego/hertz/pkg/common/hlog"
+
+	"github.com/2451965602/LMS/biz/dal"
 )
+
+func init() {
+	err := dal.Init()
+	hlog.Errorf("dal.Init() error: %v", err)
+	os.Exit(-1)
+}
 
 func main() {
 	h := server.Default()

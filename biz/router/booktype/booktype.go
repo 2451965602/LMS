@@ -3,8 +3,9 @@
 package booktype
 
 import (
-	booktype "github.com/2451965602/LMS/biz/handler/booktype"
 	"github.com/cloudwego/hertz/pkg/app/server"
+
+	booktype "github.com/2451965602/LMS/biz/handler/booktype"
 )
 
 /*

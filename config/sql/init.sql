@@ -1,11 +1,11 @@
 -- 用户表
 CREATE TABLE Users (
                        ID INT AUTO_INCREMENT PRIMARY KEY,
-                       Name VARCHAR(50) NOT NULL,
+                       Name VARCHAR(50) NOT NULL UNIQUE,
+                       Password VARCHAR(255) NOT NULL,
                        Permissions ENUM('admin', 'librarian', 'member') NOT NULL DEFAULT 'member',
                        Phone VARCHAR(20),
                        RegisterDate TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-                       LastLogin TIMESTAMP,
                        Status ENUM('active', 'suspended', 'inactive') DEFAULT 'active'
 ) COMMENT '系统用户信息表';
 
@@ -40,7 +40,7 @@ CREATE TABLE BorrowRecords (
                                UserID INT NOT NULL,
                                BookID INT NOT NULL,
                                CheckoutDate TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-                               DueDate TIMESTAMP NOT NULL,
+                               DueDate TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP + INTERVAL 14 DAY,
                                ReturnDate TIMESTAMP,
                                Status ENUM('checked_out', 'returned', 'overdue', 'lost') DEFAULT 'checked_out',
                                LateFee DECIMAL(10,2) DEFAULT 0.00,
@@ -52,10 +52,11 @@ CREATE TABLE BorrowRecords (
 CREATE TABLE Reservations (
                               ID INT AUTO_INCREMENT PRIMARY KEY,
                               UserID INT NOT NULL,
+                              BookID INT NOT NULL,
                               ISBN VARCHAR(20) NOT NULL,
                               ReserveDate TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
                               ExpiryDate TIMESTAMP NOT NULL,
-                              Status ENUM('pending', 'fulfilled', 'cancelled', 'expired') DEFAULT 'pending',
+                              Status ENUM('pending', 'fulfilled', 'canceled', 'expired') DEFAULT 'pending',
                               FOREIGN KEY (UserID) REFERENCES Users(ID) ON UPDATE CASCADE ON DELETE CASCADE,
                               FOREIGN KEY (ISBN) REFERENCES BookTypes(ISBN) ON UPDATE CASCADE ON DELETE CASCADE
 ) COMMENT '图书预约记录表';

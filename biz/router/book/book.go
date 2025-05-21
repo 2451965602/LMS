@@ -3,8 +3,9 @@
 package book
 
 import (
-	book "github.com/2451965602/LMS/biz/handler/book"
 	"github.com/cloudwego/hertz/pkg/app/server"
+
+	book "github.com/2451965602/LMS/biz/handler/book"
 )
 
 /*

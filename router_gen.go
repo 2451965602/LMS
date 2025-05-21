@@ -3,8 +3,9 @@
 package main
 
 import (
-	router "databasework/biz/router"
 	"github.com/cloudwego/hertz/pkg/app/server"
+
+	router "github.com/2451965602/LMS/biz/router"
 )
 
 // register registers all routers.

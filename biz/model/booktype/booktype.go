@@ -5,8 +5,10 @@ package booktype
 import (
 	"context"
 	"fmt"
-	"github.com/2451965602/LMS/biz/model/model"
+
 	"github.com/apache/thrift/lib/go/thrift"
+
+	"github.com/2451965602/LMS/biz/model/model"
 )
 
 type AddBookTypeRequest struct {
@@ -469,8 +471,8 @@ func (p *AddBookTypeRequest) String() string {
 }
 
 type AddBookTypeResponse struct {
-	Base   *model.BaseResp `thrift:"base,1" form:"base" json:"base" query:"base"`
-	BookID int64           `thrift:"book_id,2,required" form:"book_id,required" json:"book_id,required" query:"book_id,required"`
+	Base *model.BaseResp `thrift:"base,1" form:"base" json:"base" query:"base"`
+	Data *model.BookType `thrift:"data,2,required" form:"data,required" json:"data,required" query:"data,required"`
 }
 
 func NewAddBookTypeResponse() *AddBookTypeResponse {
@@ -489,23 +491,32 @@ func (p *AddBookTypeResponse) GetBase() (v *model.BaseResp) {
 	return p.Base
 }
 
-func (p *AddBookTypeResponse) GetBookID() (v int64) {
-	return p.BookID
+var AddBookTypeResponse_Data_DEFAULT *model.BookType
+
+func (p *AddBookTypeResponse) GetData() (v *model.BookType) {
+	if !p.IsSetData() {
+		return AddBookTypeResponse_Data_DEFAULT
+	}
+	return p.Data
 }
 
 var fieldIDToName_AddBookTypeResponse = map[int16]string{
 	1: "base",
-	2: "book_id",
+	2: "data",
 }
 
 func (p *AddBookTypeResponse) IsSetBase() bool {
 	return p.Base != nil
 }
 
+func (p *AddBookTypeResponse) IsSetData() bool {
+	return p.Data != nil
+}
+
 func (p *AddBookTypeResponse) Read(iprot thrift.TProtocol) (err error) {
 	var fieldTypeId thrift.TType
 	var fieldId int16
-	var issetBookID bool = false
+	var issetData bool = false
 
 	if _, err = iprot.ReadStructBegin(); err != nil {
 		goto ReadStructBeginError
@@ -530,11 +541,11 @@ func (p *AddBookTypeResponse) Read(iprot thrift.TProtocol) (err error) {
 				goto SkipFieldError
 			}
 		case 2:
-			if fieldTypeId == thrift.I64 {
+			if fieldTypeId == thrift.STRUCT {
 				if err = p.ReadField2(iprot); err != nil {
 					goto ReadFieldError
 				}
-				issetBookID = true
+				issetData = true
 			} else if err = iprot.Skip(fieldTypeId); err != nil {
 				goto SkipFieldError
 			}
@@ -551,7 +562,7 @@ func (p *AddBookTypeResponse) Read(iprot thrift.TProtocol) (err error) {
 		goto ReadStructEndError
 	}
 
-	if !issetBookID {
+	if !issetData {
 		fieldId = 2
 		goto RequiredFieldNotSetError
 	}
@@ -582,14 +593,11 @@ func (p *AddBookTypeResponse) ReadField1(iprot thrift.TProtocol) error {
 	return nil
 }
 func (p *AddBookTypeResponse) ReadField2(iprot thrift.TProtocol) error {
-
-	var _field int64
-	if v, err := iprot.ReadI64(); err != nil {
+	_field := model.NewBookType()
+	if err := _field.Read(iprot); err != nil {
 		return err
-	} else {
-		_field = v
 	}
-	p.BookID = _field
+	p.Data = _field
 	return nil
 }
 
@@ -642,10 +650,10 @@ WriteFieldEndError:
 	return thrift.PrependError(fmt.Sprintf("%T write field 1 end error: ", p), err)
 }
 func (p *AddBookTypeResponse) writeField2(oprot thrift.TProtocol) (err error) {
-	if err = oprot.WriteFieldBegin("book_id", thrift.I64, 2); err != nil {
+	if err = oprot.WriteFieldBegin("data", thrift.STRUCT, 2); err != nil {
 		goto WriteFieldBeginError
 	}
-	if err := oprot.WriteI64(p.BookID); err != nil {
+	if err := p.Data.Write(oprot); err != nil {
 		return err
 	}
 	if err = oprot.WriteFieldEnd(); err != nil {

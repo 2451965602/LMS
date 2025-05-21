@@ -5,9 +5,10 @@ package user
 import (
 	"context"
 
-	user "github.com/2451965602/LMS/biz/model/user"
 	"github.com/cloudwego/hertz/pkg/app"
 	"github.com/cloudwego/hertz/pkg/protocol/consts"
+
+	user "github.com/2451965602/LMS/biz/model/user"
 )
 
 // AdminUpdateUser .
@@ -38,22 +39,6 @@ func AdminDeleteUser(ctx context.Context, c *app.RequestContext) {
 	}
 
 	resp := new(user.AdminDeleteUserResponse)
-
-	c.JSON(consts.StatusOK, resp)
-}
-
-// AdminUpdateUserStatus .
-// @router /user/admin/status [PUT]
-func AdminUpdateUserStatus(ctx context.Context, c *app.RequestContext) {
-	var err error
-	var req user.AdminUpdateUserStatusRequest
-	err = c.BindAndValidate(&req)
-	if err != nil {
-		c.String(consts.StatusBadRequest, err.Error())
-		return
-	}
-
-	resp := new(user.AdminUpdateUserStatusResponse)
 
 	c.JSON(consts.StatusOK, resp)
 }

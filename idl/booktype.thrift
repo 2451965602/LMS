@@ -12,7 +12,7 @@ struct AddBookTypeRequest{
 }
 struct AddBookTypeResponse{
     1: model.BaseResp base,
-    2: required i64 book_id,
+    2: required model.BookType data,
 }
 
 struct UpdateBookTypeRequest{

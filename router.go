@@ -3,8 +3,9 @@
 package main
 
 import (
-	handler "databasework/biz/handler"
 	"github.com/cloudwego/hertz/pkg/app/server"
+
+	handler "github.com/2451965602/LMS/biz/handler"
 )
 
 // customizeRegister registers customize routers.

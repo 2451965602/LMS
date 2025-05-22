@@ -1743,8 +1743,9 @@ func (p *GetBookRequest) String() string {
 }
 
 type GetBookResponse struct {
-	Base *model.BaseResp `thrift:"base,1" form:"base" json:"base" query:"base"`
-	Data []*model.Book   `thrift:"data,2,required" form:"data,required" json:"data,required" query:"data,required"`
+	Base       *model.BaseResp `thrift:"base,1" form:"base" json:"base" query:"base"`
+	Data       []*model.Book   `thrift:"data,2,required" form:"data,required" json:"data,required" query:"data,required"`
+	TotalCount int64           `thrift:"total_count,3,required" form:"total_count,required" json:"total_count,required" query:"total_count,required"`
 }
 
 func NewGetBookResponse() *GetBookResponse {
@@ -1767,9 +1768,14 @@ func (p *GetBookResponse) GetData() (v []*model.Book) {
 	return p.Data
 }
 
+func (p *GetBookResponse) GetTotalCount() (v int64) {
+	return p.TotalCount
+}
+
 var fieldIDToName_GetBookResponse = map[int16]string{
 	1: "base",
 	2: "data",
+	3: "total_count",
 }
 
 func (p *GetBookResponse) IsSetBase() bool {
@@ -1780,6 +1786,7 @@ func (p *GetBookResponse) Read(iprot thrift.TProtocol) (err error) {
 	var fieldTypeId thrift.TType
 	var fieldId int16
 	var issetData bool = false
+	var issetTotalCount bool = false
 
 	if _, err = iprot.ReadStructBegin(); err != nil {
 		goto ReadStructBeginError
@@ -1812,6 +1819,15 @@ func (p *GetBookResponse) Read(iprot thrift.TProtocol) (err error) {
 			} else if err = iprot.Skip(fieldTypeId); err != nil {
 				goto SkipFieldError
 			}
+		case 3:
+			if fieldTypeId == thrift.I64 {
+				if err = p.ReadField3(iprot); err != nil {
+					goto ReadFieldError
+				}
+				issetTotalCount = true
+			} else if err = iprot.Skip(fieldTypeId); err != nil {
+				goto SkipFieldError
+			}
 		default:
 			if err = iprot.Skip(fieldTypeId); err != nil {
 				goto SkipFieldError
@@ -1827,6 +1843,11 @@ func (p *GetBookResponse) Read(iprot thrift.TProtocol) (err error) {
 
 	if !issetData {
 		fieldId = 2
+		goto RequiredFieldNotSetError
+	}
+
+	if !issetTotalCount {
+		fieldId = 3
 		goto RequiredFieldNotSetError
 	}
 	return nil
@@ -1878,6 +1899,17 @@ func (p *GetBookResponse) ReadField2(iprot thrift.TProtocol) error {
 	p.Data = _field
 	return nil
 }
+func (p *GetBookResponse) ReadField3(iprot thrift.TProtocol) error {
+
+	var _field int64
+	if v, err := iprot.ReadI64(); err != nil {
+		return err
+	} else {
+		_field = v
+	}
+	p.TotalCount = _field
+	return nil
+}
 
 func (p *GetBookResponse) Write(oprot thrift.TProtocol) (err error) {
 	var fieldId int16
@@ -1891,6 +1923,10 @@ func (p *GetBookResponse) Write(oprot thrift.TProtocol) (err error) {
 		}
 		if err = p.writeField2(oprot); err != nil {
 			fieldId = 2
+			goto WriteFieldError
+		}
+		if err = p.writeField3(oprot); err != nil {
+			fieldId = 3
 			goto WriteFieldError
 		}
 	}
@@ -1950,6 +1986,22 @@ WriteFieldBeginError:
 	return thrift.PrependError(fmt.Sprintf("%T write field 2 begin error: ", p), err)
 WriteFieldEndError:
 	return thrift.PrependError(fmt.Sprintf("%T write field 2 end error: ", p), err)
+}
+func (p *GetBookResponse) writeField3(oprot thrift.TProtocol) (err error) {
+	if err = oprot.WriteFieldBegin("total_count", thrift.I64, 3); err != nil {
+		goto WriteFieldBeginError
+	}
+	if err := oprot.WriteI64(p.TotalCount); err != nil {
+		return err
+	}
+	if err = oprot.WriteFieldEnd(); err != nil {
+		goto WriteFieldEndError
+	}
+	return nil
+WriteFieldBeginError:
+	return thrift.PrependError(fmt.Sprintf("%T write field 3 begin error: ", p), err)
+WriteFieldEndError:
+	return thrift.PrependError(fmt.Sprintf("%T write field 3 end error: ", p), err)
 }
 
 func (p *GetBookResponse) String() string {

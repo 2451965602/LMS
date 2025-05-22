@@ -41,6 +41,7 @@ struct GetBookRequest{
 struct GetBookResponse{
     1: model.BaseResp base,
     2: required list<model.Book> data,
+    3: required i64 total_count,
 }
 
 service BookService {

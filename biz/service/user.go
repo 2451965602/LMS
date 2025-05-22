@@ -81,6 +81,14 @@ func (s *UserService) GetUserById(ctx context.Context, userId int64) (*db.User, 
 	return info, nil
 }
 
+func (s *UserService) GetUserByName(ctx context.Context, username string) (*db.User, error) {
+	info, err := db.GetUserByName(ctx, username)
+	if err != nil {
+		return nil, err
+	}
+	return info, nil
+}
+
 func (s *UserService) AdminUpdateUser(ctx context.Context, req user.AdminUpdateUserRequest) (*db.User, error) {
 	currentUserID, err := contextLogin.GetLoginData(ctx)
 	if err != nil {

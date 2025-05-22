@@ -190,11 +190,22 @@ func BookRenew(ctx context.Context, userId, borrowId int64, daysToExtend int) (*
 	return &record, nil
 }
 
-func GetCurrentBorrowRecord(ctx context.Context, userId, pageNum, pageSize int64) ([]BorrowRecord, int64, error) {
+func GetCurrentBorrowRecord(ctx context.Context, userId, pageNum, pageSize, status int64) ([]BorrowRecord, int64, error) {
 	var results []BorrowRecord
 	var total int64
 
 	baseQuery := db.WithContext(ctx).Table(BorrowRecord{}.TableName()).Where("user_id = ?", userId)
+
+	switch status {
+	case constants.CheckedOut:
+		baseQuery = baseQuery.Where("status = ?", "checked_out")
+	case constants.Returned:
+		baseQuery = baseQuery.Where("status = ?", "returned")
+	case constants.Overdue:
+		baseQuery = baseQuery.Where("status = ?", "overdue")
+	case constants.Lost:
+		baseQuery = baseQuery.Where("status = ?", "lost")
+	}
 
 	err := baseQuery.Count(&total).Error
 	if err != nil {

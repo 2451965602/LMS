@@ -71,7 +71,7 @@ func (s *BookTypeService) DeleteBookType(ctx context.Context, req booktype.Delet
 }
 
 func (s *BookTypeService) SearchBookType(ctx context.Context, req booktype.GetBookTypeRequest) ([]*db.BookType, int64, error) {
-	bookTypes, total, err := db.SearchBookType(ctx, req.Title, req.ISBN, req.Author, req.PageNum, req.PageSize)
+	bookTypes, total, err := db.SearchBookType(ctx, req.Title, req.Author, req.ISBN, req.PageNum, req.PageSize)
 	if err != nil {
 		return nil, 0, err
 	}

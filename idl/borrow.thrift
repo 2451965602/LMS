@@ -3,8 +3,6 @@ include "model.thrift"
 
 struct BorrowRequest{
     1: required i64 book_id,
-    2: required i64 reserve_id,
-    3: required i64 reserve,
 }
 struct BorrowResponse{
     1: model.BaseResp base,
@@ -35,10 +33,12 @@ struct GetBorrowRecordRequest{
     1: required i64 user_id,
     2: required i64 page_size,
     3: required i64 page_num,
+    4: required i64 status,
 }
 struct GetBorrowRecordResponse{
     1: model.BaseResp base,
     2: required list<model.BorrowRecord> data,
+    3: required i64 total,
 }
 
 

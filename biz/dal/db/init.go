@@ -18,7 +18,7 @@ var db *gorm.DB
 func Init() error {
 	dsn, err := utils.GetMysqlDSN()
 	if err != nil {
-		return errno.NewErrNo(errno.InternalDatabaseErrorCode, fmt.Sprintf("dal.InitMySQL get mysql DSN error: %v", err))
+		return errno.Errorf(errno.InternalDatabaseErrorCode, fmt.Sprintf("dal.InitMySQL get mysql DSN error: %v", err))
 	}
 
 	db, err = gorm.Open(mysql.Open(dsn),
@@ -36,7 +36,7 @@ func Init() error {
 
 	sqlDB, err := db.DB() // 尝试获取 DB 实例对象
 	if err != nil {
-		return errno.NewErrNo(errno.InternalDatabaseErrorCode, fmt.Sprintf("get generic database object error: %v", err))
+		return errno.Errorf(errno.InternalDatabaseErrorCode, fmt.Sprintf("get generic database object error: %v", err))
 	}
 
 	sqlDB.SetMaxIdleConns(constants.MaxIdleConns)       // 最大闲置连接数
@@ -47,7 +47,7 @@ func Init() error {
 
 	// 进行连通性测试
 	if err = sqlDB.Ping(); err != nil {
-		return errno.NewErrNo(errno.InternalDatabaseErrorCode, fmt.Sprintf("ping database error: %v", err))
+		return errno.Errorf(errno.InternalDatabaseErrorCode, fmt.Sprintf("ping database error: %v", err))
 	}
 	return nil
 }

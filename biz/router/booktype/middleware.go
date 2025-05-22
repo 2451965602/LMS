@@ -4,11 +4,15 @@ package booktype
 
 import (
 	"github.com/cloudwego/hertz/pkg/app"
+
+	"github.com/2451965602/LMS/biz/router/auth"
 )
 
 func rootMw() []app.HandlerFunc {
 	// your code...
-	return nil
+	return append(make([]app.HandlerFunc, 0),
+		auth.AccessTokenAuth(),
+	)
 }
 
 func _booktypeMw() []app.HandlerFunc {

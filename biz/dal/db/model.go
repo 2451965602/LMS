@@ -10,7 +10,7 @@ type User struct {
 	ID           int64     `json:"id"            gorm:"primaryKey;autoIncrement"`
 	Name         string    `json:"name"          gorm:"type:varchar(50);not null;unique"`
 	Password     string    `json:"password"      gorm:"type:varchar(255);not null"`
-	Permission   string    `json:"permissions"   gorm:"type:enum('admin','librarian','member');default:'member';not null"`
+	Permission   string    `json:"permission"   gorm:"type:enum('admin','librarian','member');default:'member';not null"`
 	Phone        *string   `json:"phone"         gorm:"type:varchar(20)"`
 	RegisterDate time.Time `json:"register_date" gorm:"column:pegister_date;type:timestamp;default:CURRENT_TIMESTAMP;not null"`
 	Status       string    `json:"status"        gorm:"type:enum('active','suspended','inactive');default:'active';not null"`

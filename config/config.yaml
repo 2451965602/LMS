@@ -2,10 +2,9 @@ server:
   addr: 127.0.0.1
   port: 8080
 
-
 mysql:
   addr: 127.0.0.1:3306
-  database: TikTok
-  username: TikTok
+  database: LMS
+  username: root
   password: root
   charset: utf8mb4

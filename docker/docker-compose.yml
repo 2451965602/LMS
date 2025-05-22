@@ -1,0 +1,18 @@
+services:
+  # MySQL 服务，提供关系型数据库，用于存储结构化数据
+  lms-mysql:
+    container_name: lms-mysql
+    image: mysql:9.0.1
+    env_file:
+      - "./env/mysql.env"
+    ports:
+      - "3306:3306"
+    networks:
+      - domtok
+    volumes:
+      - ../config/sql:/docker-entrypoint-initdb.d
+      - ./data/mysql:/var/lib/mysql
+networks:
+  domtok:
+    driver: bridge
+    name: lms

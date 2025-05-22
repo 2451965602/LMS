@@ -5,8 +5,10 @@ package booktype
 import (
 	"context"
 
+	"github.com/2451965602/LMS/biz/pack"
+	"github.com/2451965602/LMS/biz/service"
+
 	"github.com/cloudwego/hertz/pkg/app"
-	"github.com/cloudwego/hertz/pkg/protocol/consts"
 
 	booktype "github.com/2451965602/LMS/biz/model/booktype"
 )
@@ -18,13 +20,22 @@ func AddBookType(ctx context.Context, c *app.RequestContext) {
 	var req booktype.AddBookTypeRequest
 	err = c.BindAndValidate(&req)
 	if err != nil {
-		c.String(consts.StatusBadRequest, err.Error())
+		pack.SendFailResponse(c, err)
 		return
 	}
 
 	resp := new(booktype.AddBookTypeResponse)
 
-	c.JSON(consts.StatusOK, resp)
+	info, err := service.NewBookTypeService(ctx, c).AddBookType(ctx, req)
+	if err != nil {
+		pack.SendFailResponse(c, err)
+		return
+	}
+
+	resp.Base = pack.BuildBaseResp(nil)
+	resp.Data = pack.BuildBookTypeResp(info)
+
+	pack.SendResponse(c, resp)
 }
 
 // UpdateBookType .
@@ -34,13 +45,22 @@ func UpdateBookType(ctx context.Context, c *app.RequestContext) {
 	var req booktype.UpdateBookTypeRequest
 	err = c.BindAndValidate(&req)
 	if err != nil {
-		c.String(consts.StatusBadRequest, err.Error())
+		pack.SendFailResponse(c, err)
 		return
 	}
 
 	resp := new(booktype.UpdateBookTypeResponse)
 
-	c.JSON(consts.StatusOK, resp)
+	info, err := service.NewBookTypeService(ctx, c).UpdateBookType(ctx, req)
+	if err != nil {
+		pack.SendFailResponse(c, err)
+		return
+	}
+
+	resp.Base = pack.BuildBaseResp(nil)
+	resp.Data = pack.BuildBookTypeResp(info)
+
+	pack.SendResponse(c, resp)
 }
 
 // DeleteBookType .
@@ -50,13 +70,21 @@ func DeleteBookType(ctx context.Context, c *app.RequestContext) {
 	var req booktype.DeleteBookTypeRequest
 	err = c.BindAndValidate(&req)
 	if err != nil {
-		c.String(consts.StatusBadRequest, err.Error())
+		pack.SendFailResponse(c, err)
 		return
 	}
 
 	resp := new(booktype.DeleteBookTypeResponse)
 
-	c.JSON(consts.StatusOK, resp)
+	err = service.NewBookTypeService(ctx, c).DeleteBookType(ctx, req)
+	if err != nil {
+		pack.SendFailResponse(c, err)
+		return
+	}
+
+	resp.Base = pack.BuildBaseResp(nil)
+
+	pack.SendResponse(c, resp)
 }
 
 // GetBookType .
@@ -66,11 +94,21 @@ func GetBookType(ctx context.Context, c *app.RequestContext) {
 	var req booktype.GetBookTypeRequest
 	err = c.BindAndValidate(&req)
 	if err != nil {
-		c.String(consts.StatusBadRequest, err.Error())
+		pack.SendFailResponse(c, err)
 		return
 	}
 
 	resp := new(booktype.GetBookTypeResponse)
 
-	c.JSON(consts.StatusOK, resp)
+	info, total, err := service.NewBookTypeService(ctx, c).SearchBookType(ctx, req)
+	if err != nil {
+		pack.SendFailResponse(c, err)
+		return
+	}
+
+	resp.Base = pack.BuildBaseResp(nil)
+	resp.Data = pack.BuildBookTypeListResp(info)
+	resp.Total = total
+
+	pack.SendResponse(c, resp)
 }

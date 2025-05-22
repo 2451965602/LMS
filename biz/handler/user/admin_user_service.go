@@ -5,8 +5,10 @@ package user
 import (
 	"context"
 
+	"github.com/2451965602/LMS/biz/pack"
+	"github.com/2451965602/LMS/biz/service"
+
 	"github.com/cloudwego/hertz/pkg/app"
-	"github.com/cloudwego/hertz/pkg/protocol/consts"
 
 	user "github.com/2451965602/LMS/biz/model/user"
 )
@@ -18,13 +20,21 @@ func AdminUpdateUser(ctx context.Context, c *app.RequestContext) {
 	var req user.AdminUpdateUserRequest
 	err = c.BindAndValidate(&req)
 	if err != nil {
-		c.String(consts.StatusBadRequest, err.Error())
+		pack.SendFailResponse(c, err)
 		return
 	}
 
 	resp := new(user.AdminUpdateUserResponse)
 
-	c.JSON(consts.StatusOK, resp)
+	info, err := service.NewUserService(ctx, c).AdminUpdateUser(ctx, req)
+	if err != nil {
+		pack.SendFailResponse(c, err)
+		return
+	}
+
+	resp.Base = pack.BuildBaseResp(err)
+	resp.Data = pack.BuildUserResp(info)
+	pack.SendResponse(c, resp)
 }
 
 // AdminDeleteUser .
@@ -34,11 +44,17 @@ func AdminDeleteUser(ctx context.Context, c *app.RequestContext) {
 	var req user.AdminDeleteUserRequest
 	err = c.BindAndValidate(&req)
 	if err != nil {
-		c.String(consts.StatusBadRequest, err.Error())
+		pack.SendFailResponse(c, err)
 		return
 	}
 
 	resp := new(user.AdminDeleteUserResponse)
 
-	c.JSON(consts.StatusOK, resp)
+	err = service.NewUserService(ctx, c).AdminDeleteUser(ctx, req)
+	if err != nil {
+		pack.SendFailResponse(c, err)
+		return
+	}
+	resp.Base = pack.BuildBaseResp(err)
+	pack.SendResponse(c, resp)
 }

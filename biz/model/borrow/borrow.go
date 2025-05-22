@@ -12,9 +12,7 @@ import (
 )
 
 type BorrowRequest struct {
-	BookID    int64 `thrift:"book_id,1,required" form:"book_id,required" json:"book_id,required" query:"book_id,required"`
-	ReserveID int64 `thrift:"reserve_id,2,required" form:"reserve_id,required" json:"reserve_id,required" query:"reserve_id,required"`
-	Reserve   int64 `thrift:"reserve,3,required" form:"reserve,required" json:"reserve,required" query:"reserve,required"`
+	BookID int64 `thrift:"book_id,1,required" form:"book_id,required" json:"book_id,required" query:"book_id,required"`
 }
 
 func NewBorrowRequest() *BorrowRequest {
@@ -28,26 +26,14 @@ func (p *BorrowRequest) GetBookID() (v int64) {
 	return p.BookID
 }
 
-func (p *BorrowRequest) GetReserveID() (v int64) {
-	return p.ReserveID
-}
-
-func (p *BorrowRequest) GetReserve() (v int64) {
-	return p.Reserve
-}
-
 var fieldIDToName_BorrowRequest = map[int16]string{
 	1: "book_id",
-	2: "reserve_id",
-	3: "reserve",
 }
 
 func (p *BorrowRequest) Read(iprot thrift.TProtocol) (err error) {
 	var fieldTypeId thrift.TType
 	var fieldId int16
 	var issetBookID bool = false
-	var issetReserveID bool = false
-	var issetReserve bool = false
 
 	if _, err = iprot.ReadStructBegin(); err != nil {
 		goto ReadStructBeginError
@@ -72,24 +58,6 @@ func (p *BorrowRequest) Read(iprot thrift.TProtocol) (err error) {
 			} else if err = iprot.Skip(fieldTypeId); err != nil {
 				goto SkipFieldError
 			}
-		case 2:
-			if fieldTypeId == thrift.I64 {
-				if err = p.ReadField2(iprot); err != nil {
-					goto ReadFieldError
-				}
-				issetReserveID = true
-			} else if err = iprot.Skip(fieldTypeId); err != nil {
-				goto SkipFieldError
-			}
-		case 3:
-			if fieldTypeId == thrift.I64 {
-				if err = p.ReadField3(iprot); err != nil {
-					goto ReadFieldError
-				}
-				issetReserve = true
-			} else if err = iprot.Skip(fieldTypeId); err != nil {
-				goto SkipFieldError
-			}
 		default:
 			if err = iprot.Skip(fieldTypeId); err != nil {
 				goto SkipFieldError
@@ -105,16 +73,6 @@ func (p *BorrowRequest) Read(iprot thrift.TProtocol) (err error) {
 
 	if !issetBookID {
 		fieldId = 1
-		goto RequiredFieldNotSetError
-	}
-
-	if !issetReserveID {
-		fieldId = 2
-		goto RequiredFieldNotSetError
-	}
-
-	if !issetReserve {
-		fieldId = 3
 		goto RequiredFieldNotSetError
 	}
 	return nil
@@ -146,28 +104,6 @@ func (p *BorrowRequest) ReadField1(iprot thrift.TProtocol) error {
 	p.BookID = _field
 	return nil
 }
-func (p *BorrowRequest) ReadField2(iprot thrift.TProtocol) error {
-
-	var _field int64
-	if v, err := iprot.ReadI64(); err != nil {
-		return err
-	} else {
-		_field = v
-	}
-	p.ReserveID = _field
-	return nil
-}
-func (p *BorrowRequest) ReadField3(iprot thrift.TProtocol) error {
-
-	var _field int64
-	if v, err := iprot.ReadI64(); err != nil {
-		return err
-	} else {
-		_field = v
-	}
-	p.Reserve = _field
-	return nil
-}
 
 func (p *BorrowRequest) Write(oprot thrift.TProtocol) (err error) {
 	var fieldId int16
@@ -177,14 +113,6 @@ func (p *BorrowRequest) Write(oprot thrift.TProtocol) (err error) {
 	if p != nil {
 		if err = p.writeField1(oprot); err != nil {
 			fieldId = 1
-			goto WriteFieldError
-		}
-		if err = p.writeField2(oprot); err != nil {
-			fieldId = 2
-			goto WriteFieldError
-		}
-		if err = p.writeField3(oprot); err != nil {
-			fieldId = 3
 			goto WriteFieldError
 		}
 	}
@@ -220,38 +148,6 @@ WriteFieldBeginError:
 	return thrift.PrependError(fmt.Sprintf("%T write field 1 begin error: ", p), err)
 WriteFieldEndError:
 	return thrift.PrependError(fmt.Sprintf("%T write field 1 end error: ", p), err)
-}
-func (p *BorrowRequest) writeField2(oprot thrift.TProtocol) (err error) {
-	if err = oprot.WriteFieldBegin("reserve_id", thrift.I64, 2); err != nil {
-		goto WriteFieldBeginError
-	}
-	if err := oprot.WriteI64(p.ReserveID); err != nil {
-		return err
-	}
-	if err = oprot.WriteFieldEnd(); err != nil {
-		goto WriteFieldEndError
-	}
-	return nil
-WriteFieldBeginError:
-	return thrift.PrependError(fmt.Sprintf("%T write field 2 begin error: ", p), err)
-WriteFieldEndError:
-	return thrift.PrependError(fmt.Sprintf("%T write field 2 end error: ", p), err)
-}
-func (p *BorrowRequest) writeField3(oprot thrift.TProtocol) (err error) {
-	if err = oprot.WriteFieldBegin("reserve", thrift.I64, 3); err != nil {
-		goto WriteFieldBeginError
-	}
-	if err := oprot.WriteI64(p.Reserve); err != nil {
-		return err
-	}
-	if err = oprot.WriteFieldEnd(); err != nil {
-		goto WriteFieldEndError
-	}
-	return nil
-WriteFieldBeginError:
-	return thrift.PrependError(fmt.Sprintf("%T write field 3 begin error: ", p), err)
-WriteFieldEndError:
-	return thrift.PrependError(fmt.Sprintf("%T write field 3 end error: ", p), err)
 }
 
 func (p *BorrowRequest) String() string {
@@ -1374,6 +1270,7 @@ type GetBorrowRecordRequest struct {
 	UserID   int64 `thrift:"user_id,1,required" form:"user_id,required" json:"user_id,required" query:"user_id,required"`
 	PageSize int64 `thrift:"page_size,2,required" form:"page_size,required" json:"page_size,required" query:"page_size,required"`
 	PageNum  int64 `thrift:"page_num,3,required" form:"page_num,required" json:"page_num,required" query:"page_num,required"`
+	Status   int64 `thrift:"status,4,required" form:"status,required" json:"status,required" query:"status,required"`
 }
 
 func NewGetBorrowRecordRequest() *GetBorrowRecordRequest {
@@ -1395,10 +1292,15 @@ func (p *GetBorrowRecordRequest) GetPageNum() (v int64) {
 	return p.PageNum
 }
 
+func (p *GetBorrowRecordRequest) GetStatus() (v int64) {
+	return p.Status
+}
+
 var fieldIDToName_GetBorrowRecordRequest = map[int16]string{
 	1: "user_id",
 	2: "page_size",
 	3: "page_num",
+	4: "status",
 }
 
 func (p *GetBorrowRecordRequest) Read(iprot thrift.TProtocol) (err error) {
@@ -1407,6 +1309,7 @@ func (p *GetBorrowRecordRequest) Read(iprot thrift.TProtocol) (err error) {
 	var issetUserID bool = false
 	var issetPageSize bool = false
 	var issetPageNum bool = false
+	var issetStatus bool = false
 
 	if _, err = iprot.ReadStructBegin(); err != nil {
 		goto ReadStructBeginError
@@ -1449,6 +1352,15 @@ func (p *GetBorrowRecordRequest) Read(iprot thrift.TProtocol) (err error) {
 			} else if err = iprot.Skip(fieldTypeId); err != nil {
 				goto SkipFieldError
 			}
+		case 4:
+			if fieldTypeId == thrift.I64 {
+				if err = p.ReadField4(iprot); err != nil {
+					goto ReadFieldError
+				}
+				issetStatus = true
+			} else if err = iprot.Skip(fieldTypeId); err != nil {
+				goto SkipFieldError
+			}
 		default:
 			if err = iprot.Skip(fieldTypeId); err != nil {
 				goto SkipFieldError
@@ -1474,6 +1386,11 @@ func (p *GetBorrowRecordRequest) Read(iprot thrift.TProtocol) (err error) {
 
 	if !issetPageNum {
 		fieldId = 3
+		goto RequiredFieldNotSetError
+	}
+
+	if !issetStatus {
+		fieldId = 4
 		goto RequiredFieldNotSetError
 	}
 	return nil
@@ -1527,6 +1444,17 @@ func (p *GetBorrowRecordRequest) ReadField3(iprot thrift.TProtocol) error {
 	p.PageNum = _field
 	return nil
 }
+func (p *GetBorrowRecordRequest) ReadField4(iprot thrift.TProtocol) error {
+
+	var _field int64
+	if v, err := iprot.ReadI64(); err != nil {
+		return err
+	} else {
+		_field = v
+	}
+	p.Status = _field
+	return nil
+}
 
 func (p *GetBorrowRecordRequest) Write(oprot thrift.TProtocol) (err error) {
 	var fieldId int16
@@ -1544,6 +1472,10 @@ func (p *GetBorrowRecordRequest) Write(oprot thrift.TProtocol) (err error) {
 		}
 		if err = p.writeField3(oprot); err != nil {
 			fieldId = 3
+			goto WriteFieldError
+		}
+		if err = p.writeField4(oprot); err != nil {
+			fieldId = 4
 			goto WriteFieldError
 		}
 	}
@@ -1612,6 +1544,22 @@ WriteFieldBeginError:
 WriteFieldEndError:
 	return thrift.PrependError(fmt.Sprintf("%T write field 3 end error: ", p), err)
 }
+func (p *GetBorrowRecordRequest) writeField4(oprot thrift.TProtocol) (err error) {
+	if err = oprot.WriteFieldBegin("status", thrift.I64, 4); err != nil {
+		goto WriteFieldBeginError
+	}
+	if err := oprot.WriteI64(p.Status); err != nil {
+		return err
+	}
+	if err = oprot.WriteFieldEnd(); err != nil {
+		goto WriteFieldEndError
+	}
+	return nil
+WriteFieldBeginError:
+	return thrift.PrependError(fmt.Sprintf("%T write field 4 begin error: ", p), err)
+WriteFieldEndError:
+	return thrift.PrependError(fmt.Sprintf("%T write field 4 end error: ", p), err)
+}
 
 func (p *GetBorrowRecordRequest) String() string {
 	if p == nil {
@@ -1622,8 +1570,9 @@ func (p *GetBorrowRecordRequest) String() string {
 }
 
 type GetBorrowRecordResponse struct {
-	Base *model.BaseResp       `thrift:"base,1" form:"base" json:"base" query:"base"`
-	Data []*model.BorrowRecord `thrift:"data,2,required" form:"data,required" json:"data,required" query:"data,required"`
+	Base  *model.BaseResp       `thrift:"base,1" form:"base" json:"base" query:"base"`
+	Data  []*model.BorrowRecord `thrift:"data,2,required" form:"data,required" json:"data,required" query:"data,required"`
+	Total int64                 `thrift:"total,3,required" form:"total,required" json:"total,required" query:"total,required"`
 }
 
 func NewGetBorrowRecordResponse() *GetBorrowRecordResponse {
@@ -1646,9 +1595,14 @@ func (p *GetBorrowRecordResponse) GetData() (v []*model.BorrowRecord) {
 	return p.Data
 }
 
+func (p *GetBorrowRecordResponse) GetTotal() (v int64) {
+	return p.Total
+}
+
 var fieldIDToName_GetBorrowRecordResponse = map[int16]string{
 	1: "base",
 	2: "data",
+	3: "total",
 }
 
 func (p *GetBorrowRecordResponse) IsSetBase() bool {
@@ -1659,6 +1613,7 @@ func (p *GetBorrowRecordResponse) Read(iprot thrift.TProtocol) (err error) {
 	var fieldTypeId thrift.TType
 	var fieldId int16
 	var issetData bool = false
+	var issetTotal bool = false
 
 	if _, err = iprot.ReadStructBegin(); err != nil {
 		goto ReadStructBeginError
@@ -1691,6 +1646,15 @@ func (p *GetBorrowRecordResponse) Read(iprot thrift.TProtocol) (err error) {
 			} else if err = iprot.Skip(fieldTypeId); err != nil {
 				goto SkipFieldError
 			}
+		case 3:
+			if fieldTypeId == thrift.I64 {
+				if err = p.ReadField3(iprot); err != nil {
+					goto ReadFieldError
+				}
+				issetTotal = true
+			} else if err = iprot.Skip(fieldTypeId); err != nil {
+				goto SkipFieldError
+			}
 		default:
 			if err = iprot.Skip(fieldTypeId); err != nil {
 				goto SkipFieldError
@@ -1706,6 +1670,11 @@ func (p *GetBorrowRecordResponse) Read(iprot thrift.TProtocol) (err error) {
 
 	if !issetData {
 		fieldId = 2
+		goto RequiredFieldNotSetError
+	}
+
+	if !issetTotal {
+		fieldId = 3
 		goto RequiredFieldNotSetError
 	}
 	return nil
@@ -1757,6 +1726,17 @@ func (p *GetBorrowRecordResponse) ReadField2(iprot thrift.TProtocol) error {
 	p.Data = _field
 	return nil
 }
+func (p *GetBorrowRecordResponse) ReadField3(iprot thrift.TProtocol) error {
+
+	var _field int64
+	if v, err := iprot.ReadI64(); err != nil {
+		return err
+	} else {
+		_field = v
+	}
+	p.Total = _field
+	return nil
+}
 
 func (p *GetBorrowRecordResponse) Write(oprot thrift.TProtocol) (err error) {
 	var fieldId int16
@@ -1770,6 +1750,10 @@ func (p *GetBorrowRecordResponse) Write(oprot thrift.TProtocol) (err error) {
 		}
 		if err = p.writeField2(oprot); err != nil {
 			fieldId = 2
+			goto WriteFieldError
+		}
+		if err = p.writeField3(oprot); err != nil {
+			fieldId = 3
 			goto WriteFieldError
 		}
 	}
@@ -1829,6 +1813,22 @@ WriteFieldBeginError:
 	return thrift.PrependError(fmt.Sprintf("%T write field 2 begin error: ", p), err)
 WriteFieldEndError:
 	return thrift.PrependError(fmt.Sprintf("%T write field 2 end error: ", p), err)
+}
+func (p *GetBorrowRecordResponse) writeField3(oprot thrift.TProtocol) (err error) {
+	if err = oprot.WriteFieldBegin("total", thrift.I64, 3); err != nil {
+		goto WriteFieldBeginError
+	}
+	if err := oprot.WriteI64(p.Total); err != nil {
+		return err
+	}
+	if err = oprot.WriteFieldEnd(); err != nil {
+		goto WriteFieldEndError
+	}
+	return nil
+WriteFieldBeginError:
+	return thrift.PrependError(fmt.Sprintf("%T write field 3 begin error: ", p), err)
+WriteFieldEndError:
+	return thrift.PrependError(fmt.Sprintf("%T write field 3 end error: ", p), err)
 }
 
 func (p *GetBorrowRecordResponse) String() string {

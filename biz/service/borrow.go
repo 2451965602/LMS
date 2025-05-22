@@ -65,7 +65,7 @@ func (s *BorrowService) GetCurrentBorrowRecord(ctx context.Context, req borrow.G
 		return nil, 0, err
 	}
 
-	records, total, err := db.GetCurrentBorrowRecord(ctx, userId, req.PageNum, req.PageSize)
+	records, total, err := db.GetCurrentBorrowRecord(ctx, userId, req.PageNum, req.PageSize, req.Status)
 	if err != nil {
 		return nil, 0, err
 	}

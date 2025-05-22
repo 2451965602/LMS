@@ -58,9 +58,16 @@ env-down:
 hz-%:
 	hz update -idl ${IDL_PATH}/$*.thrift
 
-## --------------------------------------
-## 清理与校验
-## --------------------------------------
+
+.PHONY: run
+run:
+	@echo "$(PREFIX) Starting the server..."
+	@go run ./
+
+.PHONY: build
+build:
+	@echo "$(PREFIX) Building the server..."
+	@sh ./build.sh
 
 # 清除所有的构建产物
 .PHONY: clean

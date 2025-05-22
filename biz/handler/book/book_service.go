@@ -5,8 +5,10 @@ package book
 import (
 	"context"
 
+	"github.com/2451965602/LMS/biz/pack"
+	"github.com/2451965602/LMS/biz/service"
+
 	"github.com/cloudwego/hertz/pkg/app"
-	"github.com/cloudwego/hertz/pkg/protocol/consts"
 
 	book "github.com/2451965602/LMS/biz/model/book"
 )
@@ -18,13 +20,22 @@ func AddBook(ctx context.Context, c *app.RequestContext) {
 	var req book.AddBookRequest
 	err = c.BindAndValidate(&req)
 	if err != nil {
-		c.String(consts.StatusBadRequest, err.Error())
+		pack.SendFailResponse(c, err)
 		return
 	}
 
 	resp := new(book.AddBookResponse)
 
-	c.JSON(consts.StatusOK, resp)
+	id, err := service.NewBookService(ctx, c).AddBook(ctx, req)
+	if err != nil {
+		pack.SendFailResponse(c, err)
+		return
+	}
+
+	resp.Base = pack.BuildBaseResp(err)
+	resp.BookID = id
+
+	pack.SendResponse(c, resp)
 }
 
 // UpdateBook .
@@ -34,13 +45,22 @@ func UpdateBook(ctx context.Context, c *app.RequestContext) {
 	var req book.UpdateBookRequest
 	err = c.BindAndValidate(&req)
 	if err != nil {
-		c.String(consts.StatusBadRequest, err.Error())
+		pack.SendFailResponse(c, err)
 		return
 	}
 
 	resp := new(book.UpdateBookResponse)
 
-	c.JSON(consts.StatusOK, resp)
+	info, err := service.NewBookService(ctx, c).UpdateBook(ctx, req)
+	if err != nil {
+		pack.SendFailResponse(c, err)
+		return
+	}
+
+	resp.Base = pack.BuildBaseResp(err)
+	resp.Data = pack.BuildBookResp(info)
+
+	pack.SendResponse(c, resp)
 }
 
 // DeleteBook .
@@ -50,13 +70,21 @@ func DeleteBook(ctx context.Context, c *app.RequestContext) {
 	var req book.DeleteBookRequest
 	err = c.BindAndValidate(&req)
 	if err != nil {
-		c.String(consts.StatusBadRequest, err.Error())
+		pack.SendFailResponse(c, err)
 		return
 	}
 
 	resp := new(book.DeleteBookResponse)
 
-	c.JSON(consts.StatusOK, resp)
+	err = service.NewBookService(ctx, c).DeleteBook(ctx, req)
+	if err != nil {
+		pack.SendFailResponse(c, err)
+		return
+	}
+
+	resp.Base = pack.BuildBaseResp(err)
+
+	pack.SendResponse(c, resp)
 }
 
 // GetBook .
@@ -66,11 +94,21 @@ func GetBook(ctx context.Context, c *app.RequestContext) {
 	var req book.GetBookRequest
 	err = c.BindAndValidate(&req)
 	if err != nil {
-		c.String(consts.StatusBadRequest, err.Error())
+		pack.SendFailResponse(c, err)
 		return
 	}
 
 	resp := new(book.GetBookResponse)
 
-	c.JSON(consts.StatusOK, resp)
+	info, total, err := service.NewBookService(ctx, c).SearchBook(ctx, req)
+	if err != nil {
+		pack.SendFailResponse(c, err)
+		return
+	}
+
+	resp.Base = pack.BuildBaseResp(err)
+	resp.Data = pack.BuildBookListResp(info)
+	resp.TotalCount = total
+
+	pack.SendResponse(c, resp)
 }

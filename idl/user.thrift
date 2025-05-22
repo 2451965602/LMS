@@ -64,6 +64,12 @@ struct AdminDeleteUserResponse{
     1: model.BaseResp base,
 }
 
+struct RefreshTokenRequest{
+
+}
+struct RefreshTokenResponse{
+    1: model.BaseResp base,
+}
 
 
 service UserService {
@@ -72,6 +78,7 @@ service UserService {
     UpdateUserResponse updateUser(1: UpdateUserRequest req)(api.put="/user/update"),
     UserInfoResponse userInfo(1: UserInfoRequest req)(api.get="/user/info"),
     DeleteUserResponse deleteUser(1: DeleteUserRequest req)(api.delete="/user/delete"),
+    RefreshTokenResponse refreshToken(1: RefreshTokenRequest req)(api.post="/user/refresh"),
 }
 
 service AdminUserService {

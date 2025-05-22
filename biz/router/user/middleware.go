@@ -4,6 +4,8 @@ package user
 
 import (
 	"github.com/cloudwego/hertz/pkg/app"
+
+	"github.com/2451965602/LMS/biz/router/auth"
 )
 
 func rootMw() []app.HandlerFunc {
@@ -18,7 +20,9 @@ func _userMw() []app.HandlerFunc {
 
 func _deleteuserMw() []app.HandlerFunc {
 	// your code...
-	return nil
+	return append(make([]app.HandlerFunc, 0),
+		auth.AccessTokenAuth(),
+	)
 }
 
 func _loginMw() []app.HandlerFunc {
@@ -33,20 +37,19 @@ func _registerMw() []app.HandlerFunc {
 
 func _updateuserMw() []app.HandlerFunc {
 	// your code...
-	return nil
+	return append(make([]app.HandlerFunc, 0),
+		auth.AccessTokenAuth(),
+	)
 }
 
 func _adminMw() []app.HandlerFunc {
 	// your code...
-	return nil
+	return append(make([]app.HandlerFunc, 0),
+		auth.AccessTokenAuth(),
+	)
 }
 
 func _admindeleteuserMw() []app.HandlerFunc {
-	// your code...
-	return nil
-}
-
-func _adminupdateuserstatusMw() []app.HandlerFunc {
 	// your code...
 	return nil
 }
@@ -58,5 +61,14 @@ func _adminupdateuserMw() []app.HandlerFunc {
 
 func _userinfoMw() []app.HandlerFunc {
 	// your code...
-	return nil
+	return append(make([]app.HandlerFunc, 0),
+		auth.AccessTokenAuth(),
+	)
+}
+
+func _refreshtokenMw() []app.HandlerFunc {
+	// your code...
+	return append(make([]app.HandlerFunc, 0),
+		auth.RefreshTokenAuth(),
+	)
 }

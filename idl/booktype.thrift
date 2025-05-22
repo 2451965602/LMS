@@ -46,6 +46,7 @@ struct GetBookTypeRequest{
 struct GetBookTypeResponse{
     1: model.BaseResp base,
     2: required list<model.BookType> data,
+    3: required i64 total,
 }
 
 

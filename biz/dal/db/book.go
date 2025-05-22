@@ -27,13 +27,16 @@ func AddBook(ctx context.Context, req book.AddBookRequest) (int64, error) {
 
 		result := tx.Table(BookType{}.TableName()).
 			Where("ISBN = ?", bk.ISBN).
-			Update("total_copies", gorm.Expr("total_copies + 1"))
+			Updates(map[string]interface{}{
+				"total_copies":     gorm.Expr("total_copies + 1"),
+				"available_copies": gorm.Expr("available_copies + 1"),
+			})
 
 		if result.Error != nil {
 			return errno.Errorf(errno.InternalDatabaseErrorCode, "add book count failed: %v", result.Error)
 		}
 		if result.RowsAffected == 0 {
-			return errno.Errorf(errno.ServiceBookTypeNotFound, "book type with ISBN %s not found, cannot update total copies", bk.ISBN)
+			return errno.Errorf(errno.ServiceBookTypeNotFound, "book type with ISBN %s not found, cannot update copies", bk.ISBN)
 		}
 		return nil
 	})
@@ -117,9 +120,17 @@ func DeleteBook(ctx context.Context, bookId int64) error {
 			return errno.NewErrNo(errno.ServiceBookNotExist, "book not found during delete operation")
 		}
 
+		availableExpr := "available_copies - 1"
+		if bk.Status != "available" {
+			availableExpr = "available_copies"
+		}
+
 		updateResult := tx.Table(BookType{}.TableName()).
 			Where("ISBN = ?", bk.ISBN).
-			Update("total_copies", gorm.Expr("total_copies - 1"))
+			Updates(map[string]interface{}{
+				"total_copies":     gorm.Expr("total_copies - 1"),
+				"available_copies": gorm.Expr(availableExpr),
+			})
 
 		if updateResult.Error != nil {
 			return errno.Errorf(errno.InternalDatabaseErrorCode, "sub book count failed: %v", updateResult.Error)

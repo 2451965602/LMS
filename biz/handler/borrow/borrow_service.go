@@ -5,8 +5,10 @@ package borrow
 import (
 	"context"
 
+	"github.com/2451965602/LMS/biz/pack"
+	"github.com/2451965602/LMS/biz/service"
+
 	"github.com/cloudwego/hertz/pkg/app"
-	"github.com/cloudwego/hertz/pkg/protocol/consts"
 
 	borrow "github.com/2451965602/LMS/biz/model/borrow"
 )
@@ -18,13 +20,21 @@ func Borrow(ctx context.Context, c *app.RequestContext) {
 	var req borrow.BorrowRequest
 	err = c.BindAndValidate(&req)
 	if err != nil {
-		c.String(consts.StatusBadRequest, err.Error())
+		pack.SendFailResponse(c, err)
 		return
 	}
 
 	resp := new(borrow.BorrowResponse)
 
-	c.JSON(consts.StatusOK, resp)
+	borrowId, err := service.NewBorrowService(ctx, c).BookBorrow(ctx, req)
+	if err != nil {
+		pack.SendFailResponse(c, err)
+		return
+	}
+
+	resp.Base = pack.BuildBaseResp(err)
+	resp.BorrowID = borrowId
+	pack.SendResponse(c, resp)
 }
 
 // ReturnBook .
@@ -34,13 +44,22 @@ func ReturnBook(ctx context.Context, c *app.RequestContext) {
 	var req borrow.ReturnRequest
 	err = c.BindAndValidate(&req)
 	if err != nil {
-		c.String(consts.StatusBadRequest, err.Error())
+		pack.SendFailResponse(c, err)
 		return
 	}
 
 	resp := new(borrow.ReturnResponse)
 
-	c.JSON(consts.StatusOK, resp)
+	record, err := service.NewBorrowService(ctx, c).BookReturn(ctx, req)
+	if err != nil {
+		pack.SendFailResponse(c, err)
+		return
+	}
+
+	resp.Base = pack.BuildBaseResp(err)
+	resp.Data = pack.BuildBorrowRecordResp(record)
+
+	pack.SendResponse(c, resp)
 }
 
 // Renew .
@@ -50,13 +69,22 @@ func Renew(ctx context.Context, c *app.RequestContext) {
 	var req borrow.RenewRequest
 	err = c.BindAndValidate(&req)
 	if err != nil {
-		c.String(consts.StatusBadRequest, err.Error())
+		pack.SendFailResponse(c, err)
 		return
 	}
 
 	resp := new(borrow.RenewResponse)
 
-	c.JSON(consts.StatusOK, resp)
+	record, err := service.NewBorrowService(ctx, c).BookRenew(ctx, req)
+	if err != nil {
+		pack.SendFailResponse(c, err)
+		return
+	}
+
+	resp.Base = pack.BuildBaseResp(err)
+	resp.Data = pack.BuildBorrowRecordResp(record)
+
+	pack.SendResponse(c, resp)
 }
 
 // GetBorrowRecord .
@@ -66,11 +94,21 @@ func GetBorrowRecord(ctx context.Context, c *app.RequestContext) {
 	var req borrow.GetBorrowRecordRequest
 	err = c.BindAndValidate(&req)
 	if err != nil {
-		c.String(consts.StatusBadRequest, err.Error())
+		pack.SendFailResponse(c, err)
 		return
 	}
 
 	resp := new(borrow.GetBorrowRecordResponse)
 
-	c.JSON(consts.StatusOK, resp)
+	record, total, err := service.NewBorrowService(ctx, c).GetCurrentBorrowRecord(ctx, req)
+	if err != nil {
+		pack.SendFailResponse(c, err)
+		return
+	}
+
+	resp.Base = pack.BuildBaseResp(err)
+	resp.Data = pack.BuildBorrowRecordListResp(record)
+	resp.Total = total
+
+	pack.SendResponse(c, resp)
 }

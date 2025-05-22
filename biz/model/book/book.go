@@ -12,12 +12,11 @@ import (
 )
 
 type AddBookRequest struct {
-	ISBN          string `thrift:"ISBN,1,required" form:"ISBN,required" json:"ISBN,required" query:"ISBN,required"`
-	Location      string `thrift:"location,2,required" form:"location,required" json:"location,required" query:"location,required"`
-	Status        string `thrift:"status,3,required" form:"status,required" json:"status,required" query:"status,required"`
-	Purchasedate  string `thrift:"purchasedate,4,required" form:"purchasedate,required" json:"purchasedate,required" query:"purchasedate,required"`
-	Purchaseprice string `thrift:"purchaseprice,5,required" form:"purchaseprice,required" json:"purchaseprice,required" query:"purchaseprice,required"`
-	Lastcheckout  string `thrift:"lastcheckout,6,required" form:"lastcheckout,required" json:"lastcheckout,required" query:"lastcheckout,required"`
+	ISBN          string  `thrift:"ISBN,1,required" form:"ISBN,required" json:"ISBN,required" query:"ISBN,required"`
+	Location      string  `thrift:"location,2,required" form:"location,required" json:"location,required" query:"location,required"`
+	Status        string  `thrift:"status,3,required" form:"status,required" json:"status,required" query:"status,required"`
+	PurchaseDate  int64   `thrift:"purchase_date,4,required" form:"purchase_date,required" json:"purchase_date,required" query:"purchase_date,required"`
+	PurchasePrice float64 `thrift:"purchase_price,5,required" form:"purchase_price,required" json:"purchase_price,required" query:"purchase_price,required"`
 }
 
 func NewAddBookRequest() *AddBookRequest {
@@ -39,25 +38,20 @@ func (p *AddBookRequest) GetStatus() (v string) {
 	return p.Status
 }
 
-func (p *AddBookRequest) GetPurchasedate() (v string) {
-	return p.Purchasedate
+func (p *AddBookRequest) GetPurchaseDate() (v int64) {
+	return p.PurchaseDate
 }
 
-func (p *AddBookRequest) GetPurchaseprice() (v string) {
-	return p.Purchaseprice
-}
-
-func (p *AddBookRequest) GetLastcheckout() (v string) {
-	return p.Lastcheckout
+func (p *AddBookRequest) GetPurchasePrice() (v float64) {
+	return p.PurchasePrice
 }
 
 var fieldIDToName_AddBookRequest = map[int16]string{
 	1: "ISBN",
 	2: "location",
 	3: "status",
-	4: "purchasedate",
-	5: "purchaseprice",
-	6: "lastcheckout",
+	4: "purchase_date",
+	5: "purchase_price",
 }
 
 func (p *AddBookRequest) Read(iprot thrift.TProtocol) (err error) {
@@ -66,9 +60,8 @@ func (p *AddBookRequest) Read(iprot thrift.TProtocol) (err error) {
 	var issetISBN bool = false
 	var issetLocation bool = false
 	var issetStatus bool = false
-	var issetPurchasedate bool = false
-	var issetPurchaseprice bool = false
-	var issetLastcheckout bool = false
+	var issetPurchaseDate bool = false
+	var issetPurchasePrice bool = false
 
 	if _, err = iprot.ReadStructBegin(); err != nil {
 		goto ReadStructBeginError
@@ -112,29 +105,20 @@ func (p *AddBookRequest) Read(iprot thrift.TProtocol) (err error) {
 				goto SkipFieldError
 			}
 		case 4:
-			if fieldTypeId == thrift.STRING {
+			if fieldTypeId == thrift.I64 {
 				if err = p.ReadField4(iprot); err != nil {
 					goto ReadFieldError
 				}
-				issetPurchasedate = true
+				issetPurchaseDate = true
 			} else if err = iprot.Skip(fieldTypeId); err != nil {
 				goto SkipFieldError
 			}
 		case 5:
-			if fieldTypeId == thrift.STRING {
+			if fieldTypeId == thrift.DOUBLE {
 				if err = p.ReadField5(iprot); err != nil {
 					goto ReadFieldError
 				}
-				issetPurchaseprice = true
-			} else if err = iprot.Skip(fieldTypeId); err != nil {
-				goto SkipFieldError
-			}
-		case 6:
-			if fieldTypeId == thrift.STRING {
-				if err = p.ReadField6(iprot); err != nil {
-					goto ReadFieldError
-				}
-				issetLastcheckout = true
+				issetPurchasePrice = true
 			} else if err = iprot.Skip(fieldTypeId); err != nil {
 				goto SkipFieldError
 			}
@@ -166,18 +150,13 @@ func (p *AddBookRequest) Read(iprot thrift.TProtocol) (err error) {
 		goto RequiredFieldNotSetError
 	}
 
-	if !issetPurchasedate {
+	if !issetPurchaseDate {
 		fieldId = 4
 		goto RequiredFieldNotSetError
 	}
 
-	if !issetPurchaseprice {
+	if !issetPurchasePrice {
 		fieldId = 5
-		goto RequiredFieldNotSetError
-	}
-
-	if !issetLastcheckout {
-		fieldId = 6
 		goto RequiredFieldNotSetError
 	}
 	return nil
@@ -233,35 +212,24 @@ func (p *AddBookRequest) ReadField3(iprot thrift.TProtocol) error {
 }
 func (p *AddBookRequest) ReadField4(iprot thrift.TProtocol) error {
 
-	var _field string
-	if v, err := iprot.ReadString(); err != nil {
+	var _field int64
+	if v, err := iprot.ReadI64(); err != nil {
 		return err
 	} else {
 		_field = v
 	}
-	p.Purchasedate = _field
+	p.PurchaseDate = _field
 	return nil
 }
 func (p *AddBookRequest) ReadField5(iprot thrift.TProtocol) error {
 
-	var _field string
-	if v, err := iprot.ReadString(); err != nil {
+	var _field float64
+	if v, err := iprot.ReadDouble(); err != nil {
 		return err
 	} else {
 		_field = v
 	}
-	p.Purchaseprice = _field
-	return nil
-}
-func (p *AddBookRequest) ReadField6(iprot thrift.TProtocol) error {
-
-	var _field string
-	if v, err := iprot.ReadString(); err != nil {
-		return err
-	} else {
-		_field = v
-	}
-	p.Lastcheckout = _field
+	p.PurchasePrice = _field
 	return nil
 }
 
@@ -289,10 +257,6 @@ func (p *AddBookRequest) Write(oprot thrift.TProtocol) (err error) {
 		}
 		if err = p.writeField5(oprot); err != nil {
 			fieldId = 5
-			goto WriteFieldError
-		}
-		if err = p.writeField6(oprot); err != nil {
-			fieldId = 6
 			goto WriteFieldError
 		}
 	}
@@ -362,10 +326,10 @@ WriteFieldEndError:
 	return thrift.PrependError(fmt.Sprintf("%T write field 3 end error: ", p), err)
 }
 func (p *AddBookRequest) writeField4(oprot thrift.TProtocol) (err error) {
-	if err = oprot.WriteFieldBegin("purchasedate", thrift.STRING, 4); err != nil {
+	if err = oprot.WriteFieldBegin("purchase_date", thrift.I64, 4); err != nil {
 		goto WriteFieldBeginError
 	}
-	if err := oprot.WriteString(p.Purchasedate); err != nil {
+	if err := oprot.WriteI64(p.PurchaseDate); err != nil {
 		return err
 	}
 	if err = oprot.WriteFieldEnd(); err != nil {
@@ -378,10 +342,10 @@ WriteFieldEndError:
 	return thrift.PrependError(fmt.Sprintf("%T write field 4 end error: ", p), err)
 }
 func (p *AddBookRequest) writeField5(oprot thrift.TProtocol) (err error) {
-	if err = oprot.WriteFieldBegin("purchaseprice", thrift.STRING, 5); err != nil {
+	if err = oprot.WriteFieldBegin("purchase_price", thrift.DOUBLE, 5); err != nil {
 		goto WriteFieldBeginError
 	}
-	if err := oprot.WriteString(p.Purchaseprice); err != nil {
+	if err := oprot.WriteDouble(p.PurchasePrice); err != nil {
 		return err
 	}
 	if err = oprot.WriteFieldEnd(); err != nil {
@@ -392,22 +356,6 @@ WriteFieldBeginError:
 	return thrift.PrependError(fmt.Sprintf("%T write field 5 begin error: ", p), err)
 WriteFieldEndError:
 	return thrift.PrependError(fmt.Sprintf("%T write field 5 end error: ", p), err)
-}
-func (p *AddBookRequest) writeField6(oprot thrift.TProtocol) (err error) {
-	if err = oprot.WriteFieldBegin("lastcheckout", thrift.STRING, 6); err != nil {
-		goto WriteFieldBeginError
-	}
-	if err := oprot.WriteString(p.Lastcheckout); err != nil {
-		return err
-	}
-	if err = oprot.WriteFieldEnd(); err != nil {
-		goto WriteFieldEndError
-	}
-	return nil
-WriteFieldBeginError:
-	return thrift.PrependError(fmt.Sprintf("%T write field 6 begin error: ", p), err)
-WriteFieldEndError:
-	return thrift.PrependError(fmt.Sprintf("%T write field 6 end error: ", p), err)
 }
 
 func (p *AddBookRequest) String() string {
@@ -617,12 +565,11 @@ func (p *AddBookResponse) String() string {
 }
 
 type UpdateBookRequest struct {
-	BookID        int64   `thrift:"book_id,1,required" form:"book_id,required" json:"book_id,required" query:"book_id,required"`
-	Location      *string `thrift:"location,2,optional" form:"location" json:"location,omitempty" query:"location"`
-	Status        *string `thrift:"status,3,optional" form:"status" json:"status,omitempty" query:"status"`
-	Purchasedate  *string `thrift:"purchasedate,4,optional" form:"purchasedate" json:"purchasedate,omitempty" query:"purchasedate"`
-	Purchaseprice *string `thrift:"purchaseprice,5,optional" form:"purchaseprice" json:"purchaseprice,omitempty" query:"purchaseprice"`
-	Lastcheckout  *string `thrift:"lastcheckout,6,optional" form:"lastcheckout" json:"lastcheckout,omitempty" query:"lastcheckout"`
+	BookID        int64    `thrift:"book_id,1,required" form:"book_id,required" json:"book_id,required" query:"book_id,required"`
+	Location      *string  `thrift:"location,2,optional" form:"location" json:"location,omitempty" query:"location"`
+	Status        *string  `thrift:"status,3,optional" form:"status" json:"status,omitempty" query:"status"`
+	PurchaseDate  *int64   `thrift:"purchase_date,4,optional" form:"purchase_date" json:"purchase_date,omitempty" query:"purchase_date"`
+	PurchasePrice *float64 `thrift:"purchase_price,5,optional" form:"purchase_price" json:"purchase_price,omitempty" query:"purchase_price"`
 }
 
 func NewUpdateBookRequest() *UpdateBookRequest {
@@ -654,40 +601,30 @@ func (p *UpdateBookRequest) GetStatus() (v string) {
 	return *p.Status
 }
 
-var UpdateBookRequest_Purchasedate_DEFAULT string
+var UpdateBookRequest_PurchaseDate_DEFAULT int64
 
-func (p *UpdateBookRequest) GetPurchasedate() (v string) {
-	if !p.IsSetPurchasedate() {
-		return UpdateBookRequest_Purchasedate_DEFAULT
+func (p *UpdateBookRequest) GetPurchaseDate() (v int64) {
+	if !p.IsSetPurchaseDate() {
+		return UpdateBookRequest_PurchaseDate_DEFAULT
 	}
-	return *p.Purchasedate
+	return *p.PurchaseDate
 }
 
-var UpdateBookRequest_Purchaseprice_DEFAULT string
+var UpdateBookRequest_PurchasePrice_DEFAULT float64
 
-func (p *UpdateBookRequest) GetPurchaseprice() (v string) {
-	if !p.IsSetPurchaseprice() {
-		return UpdateBookRequest_Purchaseprice_DEFAULT
+func (p *UpdateBookRequest) GetPurchasePrice() (v float64) {
+	if !p.IsSetPurchasePrice() {
+		return UpdateBookRequest_PurchasePrice_DEFAULT
 	}
-	return *p.Purchaseprice
-}
-
-var UpdateBookRequest_Lastcheckout_DEFAULT string
-
-func (p *UpdateBookRequest) GetLastcheckout() (v string) {
-	if !p.IsSetLastcheckout() {
-		return UpdateBookRequest_Lastcheckout_DEFAULT
-	}
-	return *p.Lastcheckout
+	return *p.PurchasePrice
 }
 
 var fieldIDToName_UpdateBookRequest = map[int16]string{
 	1: "book_id",
 	2: "location",
 	3: "status",
-	4: "purchasedate",
-	5: "purchaseprice",
-	6: "lastcheckout",
+	4: "purchase_date",
+	5: "purchase_price",
 }
 
 func (p *UpdateBookRequest) IsSetLocation() bool {
@@ -698,16 +635,12 @@ func (p *UpdateBookRequest) IsSetStatus() bool {
 	return p.Status != nil
 }
 
-func (p *UpdateBookRequest) IsSetPurchasedate() bool {
-	return p.Purchasedate != nil
+func (p *UpdateBookRequest) IsSetPurchaseDate() bool {
+	return p.PurchaseDate != nil
 }
 
-func (p *UpdateBookRequest) IsSetPurchaseprice() bool {
-	return p.Purchaseprice != nil
-}
-
-func (p *UpdateBookRequest) IsSetLastcheckout() bool {
-	return p.Lastcheckout != nil
+func (p *UpdateBookRequest) IsSetPurchasePrice() bool {
+	return p.PurchasePrice != nil
 }
 
 func (p *UpdateBookRequest) Read(iprot thrift.TProtocol) (err error) {
@@ -755,7 +688,7 @@ func (p *UpdateBookRequest) Read(iprot thrift.TProtocol) (err error) {
 				goto SkipFieldError
 			}
 		case 4:
-			if fieldTypeId == thrift.STRING {
+			if fieldTypeId == thrift.I64 {
 				if err = p.ReadField4(iprot); err != nil {
 					goto ReadFieldError
 				}
@@ -763,16 +696,8 @@ func (p *UpdateBookRequest) Read(iprot thrift.TProtocol) (err error) {
 				goto SkipFieldError
 			}
 		case 5:
-			if fieldTypeId == thrift.STRING {
+			if fieldTypeId == thrift.DOUBLE {
 				if err = p.ReadField5(iprot); err != nil {
-					goto ReadFieldError
-				}
-			} else if err = iprot.Skip(fieldTypeId); err != nil {
-				goto SkipFieldError
-			}
-		case 6:
-			if fieldTypeId == thrift.STRING {
-				if err = p.ReadField6(iprot); err != nil {
 					goto ReadFieldError
 				}
 			} else if err = iprot.Skip(fieldTypeId); err != nil {
@@ -848,35 +773,24 @@ func (p *UpdateBookRequest) ReadField3(iprot thrift.TProtocol) error {
 }
 func (p *UpdateBookRequest) ReadField4(iprot thrift.TProtocol) error {
 
-	var _field *string
-	if v, err := iprot.ReadString(); err != nil {
+	var _field *int64
+	if v, err := iprot.ReadI64(); err != nil {
 		return err
 	} else {
 		_field = &v
 	}
-	p.Purchasedate = _field
+	p.PurchaseDate = _field
 	return nil
 }
 func (p *UpdateBookRequest) ReadField5(iprot thrift.TProtocol) error {
 
-	var _field *string
-	if v, err := iprot.ReadString(); err != nil {
+	var _field *float64
+	if v, err := iprot.ReadDouble(); err != nil {
 		return err
 	} else {
 		_field = &v
 	}
-	p.Purchaseprice = _field
-	return nil
-}
-func (p *UpdateBookRequest) ReadField6(iprot thrift.TProtocol) error {
-
-	var _field *string
-	if v, err := iprot.ReadString(); err != nil {
-		return err
-	} else {
-		_field = &v
-	}
-	p.Lastcheckout = _field
+	p.PurchasePrice = _field
 	return nil
 }
 
@@ -904,10 +818,6 @@ func (p *UpdateBookRequest) Write(oprot thrift.TProtocol) (err error) {
 		}
 		if err = p.writeField5(oprot); err != nil {
 			fieldId = 5
-			goto WriteFieldError
-		}
-		if err = p.writeField6(oprot); err != nil {
-			fieldId = 6
 			goto WriteFieldError
 		}
 	}
@@ -981,11 +891,11 @@ WriteFieldEndError:
 	return thrift.PrependError(fmt.Sprintf("%T write field 3 end error: ", p), err)
 }
 func (p *UpdateBookRequest) writeField4(oprot thrift.TProtocol) (err error) {
-	if p.IsSetPurchasedate() {
-		if err = oprot.WriteFieldBegin("purchasedate", thrift.STRING, 4); err != nil {
+	if p.IsSetPurchaseDate() {
+		if err = oprot.WriteFieldBegin("purchase_date", thrift.I64, 4); err != nil {
 			goto WriteFieldBeginError
 		}
-		if err := oprot.WriteString(*p.Purchasedate); err != nil {
+		if err := oprot.WriteI64(*p.PurchaseDate); err != nil {
 			return err
 		}
 		if err = oprot.WriteFieldEnd(); err != nil {
@@ -999,11 +909,11 @@ WriteFieldEndError:
 	return thrift.PrependError(fmt.Sprintf("%T write field 4 end error: ", p), err)
 }
 func (p *UpdateBookRequest) writeField5(oprot thrift.TProtocol) (err error) {
-	if p.IsSetPurchaseprice() {
-		if err = oprot.WriteFieldBegin("purchaseprice", thrift.STRING, 5); err != nil {
+	if p.IsSetPurchasePrice() {
+		if err = oprot.WriteFieldBegin("purchase_price", thrift.DOUBLE, 5); err != nil {
 			goto WriteFieldBeginError
 		}
-		if err := oprot.WriteString(*p.Purchaseprice); err != nil {
+		if err := oprot.WriteDouble(*p.PurchasePrice); err != nil {
 			return err
 		}
 		if err = oprot.WriteFieldEnd(); err != nil {
@@ -1015,24 +925,6 @@ WriteFieldBeginError:
 	return thrift.PrependError(fmt.Sprintf("%T write field 5 begin error: ", p), err)
 WriteFieldEndError:
 	return thrift.PrependError(fmt.Sprintf("%T write field 5 end error: ", p), err)
-}
-func (p *UpdateBookRequest) writeField6(oprot thrift.TProtocol) (err error) {
-	if p.IsSetLastcheckout() {
-		if err = oprot.WriteFieldBegin("lastcheckout", thrift.STRING, 6); err != nil {
-			goto WriteFieldBeginError
-		}
-		if err := oprot.WriteString(*p.Lastcheckout); err != nil {
-			return err
-		}
-		if err = oprot.WriteFieldEnd(); err != nil {
-			goto WriteFieldEndError
-		}
-	}
-	return nil
-WriteFieldBeginError:
-	return thrift.PrependError(fmt.Sprintf("%T write field 6 begin error: ", p), err)
-WriteFieldEndError:
-	return thrift.PrependError(fmt.Sprintf("%T write field 6 end error: ", p), err)
 }
 
 func (p *UpdateBookRequest) String() string {
@@ -1540,8 +1432,10 @@ func (p *DeleteBookResponse) String() string {
 }
 
 type GetBookRequest struct {
-	BookID *int64  `thrift:"book_id,1,optional" form:"book_id" json:"book_id,omitempty" query:"book_id"`
-	ISBN   *string `thrift:"ISBN,2,optional" form:"ISBN" json:"ISBN,omitempty" query:"ISBN"`
+	BookID   *int64  `thrift:"book_id,1,optional" form:"book_id" json:"book_id,omitempty" query:"book_id"`
+	ISBN     *string `thrift:"ISBN,2,optional" form:"ISBN" json:"ISBN,omitempty" query:"ISBN"`
+	PageSize int64   `thrift:"page_size,3,required" form:"page_size,required" json:"page_size,required" query:"page_size,required"`
+	PageNum  int64   `thrift:"page_num,4,required" form:"page_num,required" json:"page_num,required" query:"page_num,required"`
 }
 
 func NewGetBookRequest() *GetBookRequest {
@@ -1569,9 +1463,19 @@ func (p *GetBookRequest) GetISBN() (v string) {
 	return *p.ISBN
 }
 
+func (p *GetBookRequest) GetPageSize() (v int64) {
+	return p.PageSize
+}
+
+func (p *GetBookRequest) GetPageNum() (v int64) {
+	return p.PageNum
+}
+
 var fieldIDToName_GetBookRequest = map[int16]string{
 	1: "book_id",
 	2: "ISBN",
+	3: "page_size",
+	4: "page_num",
 }
 
 func (p *GetBookRequest) IsSetBookID() bool {
@@ -1585,6 +1489,8 @@ func (p *GetBookRequest) IsSetISBN() bool {
 func (p *GetBookRequest) Read(iprot thrift.TProtocol) (err error) {
 	var fieldTypeId thrift.TType
 	var fieldId int16
+	var issetPageSize bool = false
+	var issetPageNum bool = false
 
 	if _, err = iprot.ReadStructBegin(); err != nil {
 		goto ReadStructBeginError
@@ -1616,6 +1522,24 @@ func (p *GetBookRequest) Read(iprot thrift.TProtocol) (err error) {
 			} else if err = iprot.Skip(fieldTypeId); err != nil {
 				goto SkipFieldError
 			}
+		case 3:
+			if fieldTypeId == thrift.I64 {
+				if err = p.ReadField3(iprot); err != nil {
+					goto ReadFieldError
+				}
+				issetPageSize = true
+			} else if err = iprot.Skip(fieldTypeId); err != nil {
+				goto SkipFieldError
+			}
+		case 4:
+			if fieldTypeId == thrift.I64 {
+				if err = p.ReadField4(iprot); err != nil {
+					goto ReadFieldError
+				}
+				issetPageNum = true
+			} else if err = iprot.Skip(fieldTypeId); err != nil {
+				goto SkipFieldError
+			}
 		default:
 			if err = iprot.Skip(fieldTypeId); err != nil {
 				goto SkipFieldError
@@ -1629,6 +1553,15 @@ func (p *GetBookRequest) Read(iprot thrift.TProtocol) (err error) {
 		goto ReadStructEndError
 	}
 
+	if !issetPageSize {
+		fieldId = 3
+		goto RequiredFieldNotSetError
+	}
+
+	if !issetPageNum {
+		fieldId = 4
+		goto RequiredFieldNotSetError
+	}
 	return nil
 ReadStructBeginError:
 	return thrift.PrependError(fmt.Sprintf("%T read struct begin error: ", p), err)
@@ -1643,6 +1576,8 @@ ReadFieldEndError:
 	return thrift.PrependError(fmt.Sprintf("%T read field end error", p), err)
 ReadStructEndError:
 	return thrift.PrependError(fmt.Sprintf("%T read struct end error: ", p), err)
+RequiredFieldNotSetError:
+	return thrift.NewTProtocolExceptionWithType(thrift.INVALID_DATA, fmt.Errorf("required field %s is not set", fieldIDToName_GetBookRequest[fieldId]))
 }
 
 func (p *GetBookRequest) ReadField1(iprot thrift.TProtocol) error {
@@ -1667,6 +1602,28 @@ func (p *GetBookRequest) ReadField2(iprot thrift.TProtocol) error {
 	p.ISBN = _field
 	return nil
 }
+func (p *GetBookRequest) ReadField3(iprot thrift.TProtocol) error {
+
+	var _field int64
+	if v, err := iprot.ReadI64(); err != nil {
+		return err
+	} else {
+		_field = v
+	}
+	p.PageSize = _field
+	return nil
+}
+func (p *GetBookRequest) ReadField4(iprot thrift.TProtocol) error {
+
+	var _field int64
+	if v, err := iprot.ReadI64(); err != nil {
+		return err
+	} else {
+		_field = v
+	}
+	p.PageNum = _field
+	return nil
+}
 
 func (p *GetBookRequest) Write(oprot thrift.TProtocol) (err error) {
 	var fieldId int16
@@ -1680,6 +1637,14 @@ func (p *GetBookRequest) Write(oprot thrift.TProtocol) (err error) {
 		}
 		if err = p.writeField2(oprot); err != nil {
 			fieldId = 2
+			goto WriteFieldError
+		}
+		if err = p.writeField3(oprot); err != nil {
+			fieldId = 3
+			goto WriteFieldError
+		}
+		if err = p.writeField4(oprot); err != nil {
+			fieldId = 4
 			goto WriteFieldError
 		}
 	}
@@ -1735,6 +1700,38 @@ WriteFieldBeginError:
 	return thrift.PrependError(fmt.Sprintf("%T write field 2 begin error: ", p), err)
 WriteFieldEndError:
 	return thrift.PrependError(fmt.Sprintf("%T write field 2 end error: ", p), err)
+}
+func (p *GetBookRequest) writeField3(oprot thrift.TProtocol) (err error) {
+	if err = oprot.WriteFieldBegin("page_size", thrift.I64, 3); err != nil {
+		goto WriteFieldBeginError
+	}
+	if err := oprot.WriteI64(p.PageSize); err != nil {
+		return err
+	}
+	if err = oprot.WriteFieldEnd(); err != nil {
+		goto WriteFieldEndError
+	}
+	return nil
+WriteFieldBeginError:
+	return thrift.PrependError(fmt.Sprintf("%T write field 3 begin error: ", p), err)
+WriteFieldEndError:
+	return thrift.PrependError(fmt.Sprintf("%T write field 3 end error: ", p), err)
+}
+func (p *GetBookRequest) writeField4(oprot thrift.TProtocol) (err error) {
+	if err = oprot.WriteFieldBegin("page_num", thrift.I64, 4); err != nil {
+		goto WriteFieldBeginError
+	}
+	if err := oprot.WriteI64(p.PageNum); err != nil {
+		return err
+	}
+	if err = oprot.WriteFieldEnd(); err != nil {
+		goto WriteFieldEndError
+	}
+	return nil
+WriteFieldBeginError:
+	return thrift.PrependError(fmt.Sprintf("%T write field 4 begin error: ", p), err)
+WriteFieldEndError:
+	return thrift.PrependError(fmt.Sprintf("%T write field 4 end error: ", p), err)
 }
 
 func (p *GetBookRequest) String() string {

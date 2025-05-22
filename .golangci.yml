@@ -36,30 +36,6 @@ linters-settings:
     # put imports beginning with prefix after 3rd-party packages;
     # it's a comma-separated list of prefixes
     local-prefixes: github.com/west2-online
-  gci:
-    # Section configuration to compare against.
-    # Section names are case-insensitive and may contain parameters in ().
-    # The default order of sections is `standard > default > custom > blank > dot > alias > localmodule`,
-    # If `custom-order` is `true`, it follows the order of `sections` option.
-    # Default: ["standard", "default"]
-    sections:
-      - standard # Standard section: captures all standard packages.
-      - default # Default section: contains all imports that could not be matched to another section type.
-      - prefix(github.com/west2-online) # Custom section: groups all imports with the specified Prefix.
-      # - blank # Blank section: contains all blank imports. This section is not present unless explicitly enabled.
-      # - dot # Dot section: contains all dot imports. This section is not present unless explicitly enabled.
-      # - alias # Alias section: contains all alias imports. This section is not present unless explicitly enabled.
-      # - localmodule # Local module section: contains all local packages. This section is not present unless explicitly enabled.
-    # Skip generated files.
-    # Default: true
-    skip-generated: true
-    # Enable custom order of sections.
-    # If `true`, make the section order the same as the order of `sections`.
-    # Default: false
-    custom-order: true
-    # Drops lexical ordering for custom sections.
-    # Default: false
-    no-lex-order: true
   nilnil:
     # List of return types to check.
     # Default: ["ptr", "func", "iface", "map", "chan", "uintptr", "unsafeptr"]
@@ -150,44 +126,6 @@ linters-settings:
     # Minimal complexity of if statements to report.
     # Default: 5
     min-complexity: 6
-  tagalign:
-    # Align and sort can be used together or separately.
-    #
-    # Whether enable align. If true, the struct tags will be aligned.
-    # e.g.:
-    # type FooBar struct {
-    #     Bar    string `json:"bar" validate:"required"`
-    #     FooFoo int8   `json:"foo_foo" validate:"required"`
-    # }
-    # will be formatted to:
-    # type FooBar struct {
-    #     Bar    string `json:"bar"     validate:"required"`
-    #     FooFoo int8   `json:"foo_foo" validate:"required"`
-    # }
-    # Default: true.
-    align: true
-    # Whether enable tags sort.
-    # If true, the tags will be sorted by name in ascending order.
-    # e.g.: `xml:"bar" json:"bar" validate:"required"` -> `json:"bar" validate:"required" xml:"bar"`
-    # Default: true
-    sort: true
-    # Specify the order of tags, the other tags will be sorted by name.
-    # This option will be ignored if `sort` is false.
-    # Default: []
-    order:
-      - json
-      - yaml
-      - yml
-      - toml
-      - mapstructure
-      - binding
-      - validate
-    # Whether enable strict style.
-    # In this style, the tags will be sorted and aligned in the dictionary order,
-    # and the tags with the same name will be aligned together.
-    # Note: This option will be ignored if 'align' or 'sort' is false.
-    # Default: false
-    strict: true
 
 linters:
   fast: false
@@ -207,7 +145,6 @@ linters:
     - ineffassign # 检测现有变量的赋值何时未被使用
     - gocritic # 提供诊断功能，检查错误、性能和样式问题
     - importas # 强制使用一致的包导入别名
-    - gci # 控制包导入顺序
     - errorlint # 检查错误处理代码合规性
     - nilerr # 检查当产生错误时仍然返回 nil 的情况
     - asciicheck # 检查非 ASCII 字符
@@ -220,4 +157,3 @@ linters:
     - makezero # 检查是否存在非零长初始化的切片
     - mirror # 报告 bytes/strings 的错误 mirror 用法
     - nestif # 检查是否存在深度嵌套的 if
-    - tagalign # 检查结构体标签是否对齐，支持自动修正

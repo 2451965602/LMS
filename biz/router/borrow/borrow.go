@@ -18,10 +18,6 @@ import (
 func Register(r *server.Hertz) {
 
 	root := r.Group("/", rootMw()...)
-	root.POST("/reserve", append(_reserve0Mw(), borrow.Reserve)...)
-	_reserve := root.Group("/reserve", _reserveMw()...)
-	_reserve.POST("/cancel", append(_cancelreservationMw(), borrow.CancelReservation)...)
-	_reserve.GET("/record", append(_getreservationMw(), borrow.GetReservation)...)
 	{
 		_book := root.Group("/book", _bookMw()...)
 		_book.POST("/borrow", append(_borrowMw(), borrow.Borrow)...)

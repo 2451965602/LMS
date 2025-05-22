@@ -1,5 +1,3 @@
-## West2-Online(Golang 下半年综合考核)
-
 ### 程序运行
 `Linux` 环境下运行
 

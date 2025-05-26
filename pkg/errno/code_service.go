@@ -4,14 +4,17 @@ package errno
 const (
 	ServiceUserExist = 1000 + iota
 	ServiceUserNotExist
-	ServiceBookTypeNotFound
-	ServiceBookNotExist
-	ServiceBorrowRecordNotExist
 	ServicePermissionDenied
+
+	ServiceBookTypeNotFound
+	ServiceBookTypeInUse
 	ServiceBookTypeExist
 	ServiceBookTypeNotExist
+
+	ServiceBookNotExist
 	ServiceBookNotAvailable
-	ServiceReserveDateError
+
+	ServiceBorrowRecordNotExist
+
 	ServiceActionNotAllowed
-	ServiceBookTypeInUse
 )

@@ -15,7 +15,7 @@ func AccessTokenAuth() app.HandlerFunc {
 	return func(ctx context.Context, c *app.RequestContext) {
 		valid, userID := mw.IsAccessTokenAvailable(ctx, c)
 		if !valid {
-			pack.SendFailResponse(c, errno.AuthInvalid)
+			pack.SendFailResponse(c, errno.Errorf(errno.AuthAccessExpiredCode, "access token expired"))
 			c.Abort()
 			return
 		}
@@ -28,7 +28,7 @@ func RefreshTokenAuth() app.HandlerFunc {
 	return func(ctx context.Context, c *app.RequestContext) {
 		valid, userID := mw.IsRefreshTokenAvailable(ctx, c)
 		if !valid {
-			pack.SendFailResponse(c, errno.AuthInvalid)
+			pack.SendFailResponse(c, errno.Errorf(errno.AuthRefreshExpiredCode, "refresh token expired"))
 			c.Abort()
 			return
 		}

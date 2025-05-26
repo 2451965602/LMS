@@ -21,7 +21,6 @@ const (
 	AuthRefreshExpiredCode                     // 刷新令牌过期
 	AuthNoTokenCode                            // 没有 token
 	AuthNoOperatePermissionCode                // 没有操作权限
-	AuthMissingTokenCode                       // 缺少 token
 	IllegalOperatorCode                        // 不合格的操作(比如传入 payment status时传入了一个不存在的 status)
 )
 

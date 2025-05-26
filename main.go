@@ -12,24 +12,34 @@ import (
 	"github.com/2451965602/LMS/config"
 )
 
+// init 初始化全局配置和中间件
 func init() {
-	config.Init()
-	mw.Init()
+	config.Init() // 初始化配置模块
+	mw.Init()     // 初始化中间件模块
+
+	// 初始化数据访问层
 	err := dal.Init()
 	if err != nil {
-		hlog.Errorf("dal.Init: %v", err)
-		panic(err)
+		hlog.Errorf("dal.Init: %v", err) // 记录初始化数据访问层的错误
+		panic(err)                       // 如果初始化失败，抛出错误并终止程序
 	}
 }
 
+// main 是程序的入口点
 func main() {
+	// 获取服务器地址
 	addr, err := utils.GetServerAddr()
 	if err != nil {
-		hlog.Errorf("utils.GetServerAddr: %v", err)
-		panic(err)
+		hlog.Errorf("utils.GetServerAddr: %v", err) // 记录获取服务器地址的错误
+		panic(err)                                  // 如果获取失败，抛出错误并终止程序
 	}
+
+	// 创建Hertz服务器实例
 	h := server.Default(server.WithHostPorts(addr))
 
+	// 注册路由和中间件
 	register(h)
+
+	// 启动服务器
 	h.Spin()
 }

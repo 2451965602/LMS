@@ -12,6 +12,11 @@ import (
 	"github.com/2451965602/LMS/pkg/errno"
 )
 
+// LoginUser 处理用户登录
+// 1. 根据用户名查询用户信息。
+// 2. 如果用户不存在，返回错误。
+// 3. 验证密码是否正确。
+// 4. 如果密码正确，返回用户信息，否则返回错误。
 func LoginUser(ctx context.Context, username, password string) (*User, error) {
 	var u User
 	err := db.WithContext(ctx).
@@ -33,6 +38,11 @@ func LoginUser(ctx context.Context, username, password string) (*User, error) {
 	return &u, nil
 }
 
+// RegisterUser 注册新用户
+// 1. 对密码进行哈希处理。
+// 2. 创建新的用户实例并填充请求参数。
+// 3. 将用户信息插入到数据库。
+// 4. 如果插入成功，返回用户的 ID，否则返回错误。
 func RegisterUser(ctx context.Context, username, password string) (int64, error) {
 	hashedPassword, err := crypt.PasswordHash(password)
 	if err != nil {
@@ -56,6 +66,12 @@ func RegisterUser(ctx context.Context, username, password string) (int64, error)
 	return u.ID, nil
 }
 
+// UpdateUser 更新用户信息
+// 1. 根据用户 ID 查询用户信息。
+// 2. 如果用户不存在，返回错误。
+// 3. 根据请求参数构建更新字段。
+// 4. 更新用户信息。
+// 5. 如果更新成功，返回更新后的用户信息，否则返回错误。
 func UpdateUser(ctx context.Context, userId int64, req user.UpdateUserRequest) (*User, error) {
 	var u User
 	if errDb := db.WithContext(ctx).Table(User{}.TableName()).Where("id = ?", userId).First(&u).Error; errDb != nil {
@@ -95,6 +111,9 @@ func UpdateUser(ctx context.Context, userId int64, req user.UpdateUserRequest) (
 	return &u, nil
 }
 
+// GetUserById 根据用户 ID 获取用户信息
+// 1. 根据用户 ID 查询用户信息。
+// 2. 如果用户存在，返回用户信息，否则返回错误。
 func GetUserById(ctx context.Context, userId int64) (*User, error) {
 	var u User
 	err := db.WithContext(ctx).
@@ -111,6 +130,9 @@ func GetUserById(ctx context.Context, userId int64) (*User, error) {
 	return &u, nil
 }
 
+// GetUserByName 根据用户名获取用户信息
+// 1. 根据用户名查询用户信息。
+// 2. 如果用户存在，返回用户信息，否则返回错误。
 func GetUserByName(ctx context.Context, username string) (*User, error) {
 	var u User
 	err := db.WithContext(ctx).
@@ -127,6 +149,9 @@ func GetUserByName(ctx context.Context, username string) (*User, error) {
 	return &u, nil
 }
 
+// IsUserExist 检查用户是否存在
+// 1. 根据用户名查询用户数量。
+// 2. 如果数量大于 0，返回 true，否则返回 false。
 func IsUserExist(ctx context.Context, username string) (bool, error) {
 	var count int64
 	err := db.WithContext(ctx).
@@ -140,6 +165,10 @@ func IsUserExist(ctx context.Context, username string) (bool, error) {
 	return count > 0, nil
 }
 
+// DeleteUser 删除用户
+// 1. 根据用户 ID 和用户名验证用户是否存在。
+// 2. 如果用户存在，从数据库中删除该用户。
+// 3. 如果删除成功，返回 nil，否则返回错误。
 func DeleteUser(ctx context.Context, userId int64, username string) error {
 	var u User
 	err := db.WithContext(ctx).
@@ -167,6 +196,12 @@ func DeleteUser(ctx context.Context, userId int64, username string) error {
 	return nil
 }
 
+// AdminUpdateUser 管理员更新用户信息
+// 1. 根据用户 ID 查询用户信息。
+// 2. 如果用户不存在，返回错误。
+// 3. 根据请求参数构建更新字段。
+// 4. 更新用户信息。
+// 5. 如果更新成功，返回更新后的用户信息，否则返回错误。
 func AdminUpdateUser(ctx context.Context, req user.AdminUpdateUserRequest) (*User, error) {
 	var u User
 	err := db.WithContext(ctx).
@@ -228,6 +263,13 @@ func AdminUpdateUser(ctx context.Context, req user.AdminUpdateUserRequest) (*Use
 	return &u, nil
 }
 
+// AdminDeleteUser 管理员删除用户
+// 1. 根据用户 ID 查询用户信息。
+// 2. 如果用户不存在，返回错误。
+// 3. 检查用户是否有活动的借阅记录，如果有，不允许删除。
+// 4. 如果用户是管理员或图书管理员，不允许删除。
+// 5. 如果用户存在且没有活动借阅记录，从数据库中删除该用户。
+// 6. 如果删除成功，返回 nil，否则返回错误。
 func AdminDeleteUser(ctx context.Context, userId int64) error {
 	var userToDelete User
 	err := db.WithContext(ctx).
@@ -271,6 +313,11 @@ func AdminDeleteUser(ctx context.Context, userId int64) error {
 	return nil
 }
 
+// IsPermission 检查用户是否具有指定权限
+// 1. 根据用户 ID 查询用户信息。
+// 2. 如果用户不存在，返回错误。
+// 3. 根据所需权限检查用户权限。
+// 4. 返回检查结果。
 func IsPermission(ctx context.Context, userId int64, requiredPermission string) (bool, error) {
 	var u User
 	err := db.WithContext(ctx).

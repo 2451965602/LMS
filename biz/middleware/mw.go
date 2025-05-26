@@ -18,133 +18,138 @@ import (
 )
 
 var (
-	AccessTokenJwtMiddleware  *jwt.HertzJWTMiddleware
-	RefreshTokenJwtMiddleware *jwt.HertzJWTMiddleware
+	AccessTokenJwtMiddleware  *jwt.HertzJWTMiddleware // Access Token的JWT中间件实例
+	RefreshTokenJwtMiddleware *jwt.HertzJWTMiddleware // Refresh Token的JWT中间件实例
 )
 
+// initJWTCommonConfig 初始化JWT中间件的通用配置
 func initJWTCommonConfig() *jwt.HertzJWTMiddleware {
 	return &jwt.HertzJWTMiddleware{
-		Realm:                       "LMS",
-		WithoutDefaultTokenHeadName: true,
-		IdentityKey:                 constants.IdentityKey,
+		Realm:                       "LMS",                 // JWT的Realm名称
+		WithoutDefaultTokenHeadName: true,                  // 不使用默认的Token头名称
+		IdentityKey:                 constants.IdentityKey, // 用户身份标识的键名
 		Unauthorized: func(ctx context.Context, c *app.RequestContext, code int, message string) {
-			pack.SendFailResponse(c, errno.AuthInvalid)
+			pack.SendFailResponse(c, errno.AuthInvalid) // 未授权时的响应处理
 		},
 	}
 }
 
+// AccessTokenJwt 初始化Access Token的JWT中间件
 func AccessTokenJwt() {
 	config := initJWTCommonConfig()
-	config.Key = []byte("AccessToken_key")
-	config.Timeout = constants.AccessTokenTTL
-	config.TokenLookup = "header: Authorization"
+	config.Key = []byte("AccessToken_key")       // Access Token的密钥
+	config.Timeout = constants.AccessTokenTTL    // Access Token的有效期
+	config.TokenLookup = "header: Authorization" // 从请求头的Authorization字段查找Token
 
 	config.PayloadFunc = func(data interface{}) jwt.MapClaims {
 		return jwt.MapClaims{
-			config.IdentityKey: data,
-			"token_type":       "access",
+			config.IdentityKey: data,     // 用户身份标识
+			"token_type":       "access", // Token类型为Access Token
 		}
 	}
 
 	config.IdentityHandler = func(ctx context.Context, c *app.RequestContext) interface{} {
-		claims := jwt.ExtractClaims(ctx, c)
-		return claims[config.IdentityKey]
+		claims := jwt.ExtractClaims(ctx, c) // 提取JWT中的Claims
+		return claims[config.IdentityKey]   // 返回用户身份标识
 	}
 
 	config.LoginResponse = func(ctx context.Context, c *app.RequestContext, code int, token string, expire time.Time) {
-		c.Set("Access-Token", token)
+		c.Set("Access-Token", token) // 将Access Token设置到上下文中
 	}
 
 	config.Authenticator = func(ctx context.Context, c *app.RequestContext) (interface{}, error) {
 		var loginStruct user.LoginRequest
-		if err := c.BindAndValidate(&loginStruct); err != nil {
+		if err := c.BindAndValidate(&loginStruct); err != nil { // 绑定并验证登录请求
 			return nil, err
 		}
-		users, err := db.LoginUser(ctx, loginStruct.Username, loginStruct.Password)
+		users, err := db.LoginUser(ctx, loginStruct.Username, loginStruct.Password) // 验证用户登录
 		if err != nil {
 			return nil, err
 		}
-		ctx = metainfoContext.WithLoginData(ctx, users.ID)
+		ctx = metainfoContext.WithLoginData(ctx, users.ID) // 将用户ID设置到上下文中
 		return users.ID, nil
 	}
 
 	config.Authorizator = func(data interface{}, ctx context.Context, c *app.RequestContext) bool {
-		claims := jwt.ExtractClaims(ctx, c)
-		if tokenType, ok := claims["token_type"].(string); ok && tokenType == "access" {
+		claims := jwt.ExtractClaims(ctx, c)                                              // 提取JWT中的Claims
+		if tokenType, ok := claims["token_type"].(string); ok && tokenType == "access" { // 检查Token类型是否为Access Token
 			return true
 		}
 		return false
 	}
 
 	var err error
-	AccessTokenJwtMiddleware, err = jwt.New(config)
+	AccessTokenJwtMiddleware, err = jwt.New(config) // 创建JWT中间件实例
 	if err != nil {
-		hlog.Fatal("AccessToken JWT Error:" + err.Error())
+		hlog.Fatal("AccessToken JWT Error:" + err.Error()) // 如果初始化失败，记录错误日志并退出
 	}
 }
 
+// RefreshTokenJwt 初始化Refresh Token的JWT中间件
 func RefreshTokenJwt() {
 	config := initJWTCommonConfig()
-	config.Key = []byte("refresh_token_key")
-	config.Timeout = constants.RefreshTokenTTL
-	config.TokenLookup = "header: Refresh-Token"
+	config.Key = []byte("refresh_token_key")     // Refresh Token的密钥
+	config.Timeout = constants.RefreshTokenTTL   // Refresh Token的有效期
+	config.TokenLookup = "header: Refresh-Token" // 从请求头的Refresh-Token字段查找Token
 
 	config.PayloadFunc = func(data interface{}) jwt.MapClaims {
 		return jwt.MapClaims{
-			config.IdentityKey: data,
-			"token_type":       "refresh",
+			config.IdentityKey: data,      // 用户身份标识
+			"token_type":       "refresh", // Token类型为Refresh Token
 		}
 	}
 
 	config.IdentityHandler = func(ctx context.Context, c *app.RequestContext) interface{} {
-		claims := jwt.ExtractClaims(ctx, c)
-		return claims[config.IdentityKey]
+		claims := jwt.ExtractClaims(ctx, c) // 提取JWT中的Claims
+		return claims[config.IdentityKey]   // 返回用户身份标识
 	}
 
 	config.LoginResponse = func(ctx context.Context, c *app.RequestContext, code int, token string, expire time.Time) {
-		c.Set("Refresh-Token", token)
+		c.Set("Refresh-Token", token) // 将Refresh Token设置到上下文中
 	}
 
 	config.Authenticator = func(ctx context.Context, c *app.RequestContext) (interface{}, error) {
 		var loginStruct user.LoginRequest
-		if err := c.BindAndValidate(&loginStruct); err != nil {
+		if err := c.BindAndValidate(&loginStruct); err != nil { // 绑定并验证登录请求
 			return nil, err
 		}
-		users, err := db.LoginUser(ctx, loginStruct.Username, loginStruct.Password)
+		users, err := db.LoginUser(ctx, loginStruct.Username, loginStruct.Password) // 验证用户登录
 		if err != nil {
 			return nil, err
 		}
-		ctx = metainfoContext.WithLoginData(ctx, users.ID)
+		ctx = metainfoContext.WithLoginData(ctx, users.ID) // 将用户ID设置到上下文中
 		return users.ID, nil
 	}
 
 	config.Authorizator = func(data interface{}, ctx context.Context, c *app.RequestContext) bool {
-		claims := jwt.ExtractClaims(ctx, c)
-		if tokenType, ok := claims["token_type"].(string); ok && tokenType == "refresh" {
+		claims := jwt.ExtractClaims(ctx, c)                                               // 提取JWT中的Claims
+		if tokenType, ok := claims["token_type"].(string); ok && tokenType == "refresh" { // 检查Token类型是否为Refresh Token
 			return true
 		}
 		return false
 	}
 
 	var err error
-	RefreshTokenJwtMiddleware, err = jwt.New(config)
+	RefreshTokenJwtMiddleware, err = jwt.New(config) // 创建JWT中间件实例
 	if err != nil {
-		hlog.Fatal("RefreshToken JWT Error:" + err.Error())
+		hlog.Fatal("RefreshToken JWT Error:" + err.Error()) // 如果初始化失败，记录错误日志并退出
 	}
 }
 
+// GenerateAccessToken 生成新的Access Token
 func GenerateAccessToken(c *app.RequestContext, userId int64) {
-	tokenString, _, _ := AccessTokenJwtMiddleware.TokenGenerator(userId)
-	c.Header("New-Access-Token", tokenString)
+	tokenString, _, _ := AccessTokenJwtMiddleware.TokenGenerator(userId) // 调用Token生成器生成新的Access Token
+	c.Header("New-Access-Token", tokenString)                            // 将新的Access Token设置到响应头中
 }
 
+// IsAccessTokenAvailable 检查Access Token是否有效
 func IsAccessTokenAvailable(ctx context.Context, c *app.RequestContext) (bool, int64) {
-	claims, err := AccessTokenJwtMiddleware.GetClaimsFromJWT(ctx, c)
+	claims, err := AccessTokenJwtMiddleware.GetClaimsFromJWT(ctx, c) // 从JWT中提取Claims
 	if err != nil {
 		return false, 0
 	}
 
-	if tokenType, ok := claims["token_type"].(string); !ok || tokenType != "access" {
+	if tokenType, ok := claims["token_type"].(string); !ok || tokenType != "access" { // 检查Token类型是否为Access Token
 		return false, 0
 	}
 
@@ -152,7 +157,7 @@ func IsAccessTokenAvailable(ctx context.Context, c *app.RequestContext) (bool, i
 	case nil:
 		return false, 0
 	case float64:
-		if int64(v) < AccessTokenJwtMiddleware.TimeFunc().Unix() {
+		if int64(v) < AccessTokenJwtMiddleware.TimeFunc().Unix() { // 检查Token是否过期
 			return false, 0
 		}
 	case json.Number:
@@ -160,38 +165,39 @@ func IsAccessTokenAvailable(ctx context.Context, c *app.RequestContext) (bool, i
 		if err != nil {
 			return false, 0
 		}
-		if n < AccessTokenJwtMiddleware.TimeFunc().Unix() {
+		if n < AccessTokenJwtMiddleware.TimeFunc().Unix() { // 检查Token是否过期
 			return false, 0
 		}
 	default:
 		return false, 0
 	}
 
-	c.Set("JWT_PAYLOAD", claims)
-	identity := AccessTokenJwtMiddleware.IdentityHandler(ctx, c)
+	c.Set("JWT_PAYLOAD", claims)                                 // 将JWT的Claims设置到上下文中
+	identity := AccessTokenJwtMiddleware.IdentityHandler(ctx, c) // 获取用户身份标识
 
 	var userID int64
-	if id, ok := claims[AccessTokenJwtMiddleware.IdentityKey].(float64); ok {
+	if id, ok := claims[AccessTokenJwtMiddleware.IdentityKey].(float64); ok { // 提取用户ID
 		userID = int64(id)
 	} else {
 		return false, 0
 	}
 
 	if identity != nil {
-		c.Set(AccessTokenJwtMiddleware.IdentityKey, identity)
+		c.Set(AccessTokenJwtMiddleware.IdentityKey, identity) // 将用户身份标识设置到上下文中
 	}
 
-	isValid := AccessTokenJwtMiddleware.Authorizator(identity, ctx, c)
+	isValid := AccessTokenJwtMiddleware.Authorizator(identity, ctx, c) // 检查Token是否有效
 	return isValid, userID
 }
 
+// IsRefreshTokenAvailable 检查Refresh Token是否有效
 func IsRefreshTokenAvailable(ctx context.Context, c *app.RequestContext) (bool, int64) {
-	claims, err := RefreshTokenJwtMiddleware.GetClaimsFromJWT(ctx, c)
+	claims, err := RefreshTokenJwtMiddleware.GetClaimsFromJWT(ctx, c) // 从JWT中提取Claims
 	if err != nil {
 		return false, 0
 	}
 
-	if tokenType, ok := claims["token_type"].(string); !ok || tokenType != "refresh" {
+	if tokenType, ok := claims["token_type"].(string); !ok || tokenType != "refresh" { // 检查Token类型是否为Refresh Token
 		return false, 0
 	}
 
@@ -199,7 +205,7 @@ func IsRefreshTokenAvailable(ctx context.Context, c *app.RequestContext) (bool, 
 	case nil:
 		return false, 0
 	case float64:
-		if int64(v) < RefreshTokenJwtMiddleware.TimeFunc().Unix() {
+		if int64(v) < RefreshTokenJwtMiddleware.TimeFunc().Unix() { // 检查Token是否过期
 			return false, 0
 		}
 	case json.Number:
@@ -207,40 +213,41 @@ func IsRefreshTokenAvailable(ctx context.Context, c *app.RequestContext) (bool, 
 		if err != nil {
 			return false, 0
 		}
-		if n < RefreshTokenJwtMiddleware.TimeFunc().Unix() {
+		if n < RefreshTokenJwtMiddleware.TimeFunc().Unix() { // 检查Token是否过期
 			return false, 0
 		}
 	default:
 		return false, 0
 	}
 
-	c.Set("JWT_PAYLOAD", claims)
-	identity := RefreshTokenJwtMiddleware.IdentityHandler(ctx, c)
+	c.Set("JWT_PAYLOAD", claims)                                  // 将JWT的Claims设置到上下文中
+	identity := RefreshTokenJwtMiddleware.IdentityHandler(ctx, c) // 获取用户身份标识
 
 	var userID int64
-	if id, ok := claims[RefreshTokenJwtMiddleware.IdentityKey].(float64); ok {
+	if id, ok := claims[RefreshTokenJwtMiddleware.IdentityKey].(float64); ok { // 提取用户ID
 		userID = int64(id)
 	} else {
 		return false, 0
 	}
 
 	if identity != nil {
-		c.Set(RefreshTokenJwtMiddleware.IdentityKey, identity)
+		c.Set(RefreshTokenJwtMiddleware.IdentityKey, identity) // 将用户身份标识设置到上下文中
 	}
 
-	isValid := RefreshTokenJwtMiddleware.Authorizator(identity, ctx, c)
+	isValid := RefreshTokenJwtMiddleware.Authorizator(identity, ctx, c) // 检查Token是否有效
 	return isValid, userID
 }
 
+// Init 初始化JWT中间件
 func Init() {
-	AccessTokenJwt()
-	RefreshTokenJwt()
+	AccessTokenJwt()  // 初始化Access Token的JWT中间件
+	RefreshTokenJwt() // 初始化Refresh Token的JWT中间件
 
-	if err := AccessTokenJwtMiddleware.MiddlewareInit(); err != nil {
+	if err := AccessTokenJwtMiddleware.MiddlewareInit(); err != nil { // 初始化Access Token的JWT中间件
 		hlog.Fatal("AccessTokenJwtMiddleware.MiddlewareInit() Error:" + err.Error())
 	}
 
-	if err := RefreshTokenJwtMiddleware.MiddlewareInit(); err != nil {
+	if err := RefreshTokenJwtMiddleware.MiddlewareInit(); err != nil { // 初始化Refresh Token的JWT中间件
 		hlog.Fatal("RefreshTokenJwtMiddleware.MiddlewareInit() Error:" + err.Error())
 	}
 }

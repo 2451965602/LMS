@@ -12,6 +12,13 @@ import (
 	"github.com/2451965602/LMS/pkg/errno"
 )
 
+// BookBorrow 处理书籍借阅操作
+// 1. 检查书籍是否存在且状态为可借阅。
+// 2. 检查书籍类型的可用副本数是否大于 0。
+// 3. 创建借阅记录。
+// 4. 更新书籍类型表中的可用副本数。
+// 5. 更新书籍表中的状态为 "checked_out"。
+// 6. 如果所有操作成功，返回借阅记录的 ID。
 func BookBorrow(ctx context.Context, userId, bookId int64) (int64, error) {
 	var br BorrowRecord
 	err := db.WithContext(ctx).Transaction(func(tx *gorm.DB) error {
@@ -69,6 +76,14 @@ func BookBorrow(ctx context.Context, userId, bookId int64) (int64, error) {
 	return br.ID, nil
 }
 
+// BookReturn 处理书籍归还操作
+// 1. 检查书籍是否存在。
+// 2. 检查借阅记录是否存在且属于指定用户和书籍。
+// 3. 检查借阅记录的状态是否为 "returned" 或 "lost"，如果是，则不允许重复归还。
+// 4. 更新借阅记录的状态、逾期费用和归还日期。
+// 5. 如果书籍状态为 "returned"，更新书籍类型表中的可用副本数，并将书籍状态设置为 "available"。
+// 6. 如果书籍状态为 "lost" 或 "damaged"，更新书籍状态。
+// 7. 返回更新后的借阅记录。
 func BookReturn(ctx context.Context, userId, bookId, borrowId int64, returnStatus string, lateFee float64) (*BorrowRecord, error) {
 	var updatedBr BorrowRecord
 
@@ -142,6 +157,12 @@ func BookReturn(ctx context.Context, userId, bookId, borrowId int64, returnStatu
 	return &updatedBr, nil
 }
 
+// BookRenew 处理书籍续借操作
+// 1. 检查借阅记录是否存在且属于指定用户。
+// 2. 检查借阅记录的状态是否为 "checked_out"。
+// 3. 检查续借次数是否达到最大限制。
+// 4. 更新借阅记录的到期日期和续借次数。
+// 5. 返回更新后的借阅记录。
 func BookRenew(ctx context.Context, userId, borrowId int64, daysToExtend int) (*BorrowRecord, error) {
 	var record BorrowRecord
 
@@ -190,6 +211,12 @@ func BookRenew(ctx context.Context, userId, borrowId int64, daysToExtend int) (*
 	return &record, nil
 }
 
+// GetCurrentBorrowRecord 获取当前用户的借阅记录
+// 1. 根据用户 ID 查询借阅记录。
+// 2. 根据状态参数过滤借阅记录。
+// 3. 查询总记录数。
+// 4. 根据分页参数查询借阅记录列表。
+// 5. 返回借阅记录列表和总记录数。
 func GetCurrentBorrowRecord(ctx context.Context, userId, pageNum, pageSize, status int64) ([]BorrowRecord, int64, error) {
 	var results []BorrowRecord
 	var total int64
@@ -205,6 +232,8 @@ func GetCurrentBorrowRecord(ctx context.Context, userId, pageNum, pageSize, stat
 		baseQuery = baseQuery.Where("status = ?", "overdue")
 	case constants.Lost:
 		baseQuery = baseQuery.Where("status = ?", "lost")
+	default:
+		return nil, 0, errno.Errorf(errno.IllegalOperatorCode, "invalid status parameter: %d", status)
 	}
 
 	err := baseQuery.Count(&total).Error
@@ -232,6 +261,9 @@ func GetCurrentBorrowRecord(ctx context.Context, userId, pageNum, pageSize, stat
 	return results, total, nil
 }
 
+// GetBorrowRecordById 根据借阅记录 ID 获取借阅记录
+// 1. 根据借阅记录 ID 查询借阅记录。
+// 2. 如果借阅记录存在，返回借阅记录，否则返回错误。
 func GetBorrowRecordById(ctx context.Context, borrowId int64) (*BorrowRecord, error) {
 	var record BorrowRecord
 	err := db.WithContext(ctx).

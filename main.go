@@ -3,9 +3,10 @@
 package main
 
 import (
-	"github.com/2451965602/LMS/pkg/utils"
 	"github.com/cloudwego/hertz/pkg/app/server"
 	"github.com/cloudwego/hertz/pkg/common/hlog"
+
+	"github.com/2451965602/LMS/pkg/utils"
 
 	"github.com/2451965602/LMS/biz/dal"
 	mw "github.com/2451965602/LMS/biz/middleware"

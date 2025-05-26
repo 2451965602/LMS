@@ -260,22 +260,3 @@ func GetCurrentBorrowRecord(ctx context.Context, userId, pageNum, pageSize, stat
 	}
 	return results, total, nil
 }
-
-// GetBorrowRecordById 根据借阅记录 ID 获取借阅记录
-// 1. 根据借阅记录 ID 查询借阅记录。
-// 2. 如果借阅记录存在，返回借阅记录，否则返回错误。
-func GetBorrowRecordById(ctx context.Context, borrowId int64) (*BorrowRecord, error) {
-	var record BorrowRecord
-	err := db.WithContext(ctx).
-		Table(BorrowRecord{}.TableName()).
-		Where("id = ?", borrowId).
-		First(&record).
-		Error
-	if err != nil {
-		if errors.Is(err, gorm.ErrRecordNotFound) {
-			return nil, errno.Errorf(errno.ServiceBorrowRecordNotExist, "borrow record not found with ID: %d", borrowId)
-		}
-		return nil, errno.Errorf(errno.InternalDatabaseErrorCode, "get borrow record by id failed: %v", err)
-	}
-	return &record, nil
-}

@@ -10,7 +10,7 @@ import (
 
 	"github.com/cloudwego/hertz/pkg/app"
 
-	borrow "github.com/2451965602/LMS/biz/model/borrow"
+	"github.com/2451965602/LMS/biz/model/borrow"
 )
 
 // Borrow .

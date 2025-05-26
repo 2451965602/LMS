@@ -10,7 +10,7 @@ import (
 
 	"github.com/cloudwego/hertz/pkg/app"
 
-	book "github.com/2451965602/LMS/biz/model/book"
+	"github.com/2451965602/LMS/biz/model/book"
 )
 
 // AddBook .

@@ -76,7 +76,7 @@ service UserService {
     RegisterResponse register(1: RegisterRequest req)(api.post="/user/register"),
     LoginResponse login(1: LoginRequest req)(api.post="/user/login"),
     UpdateUserResponse updateUser(1: UpdateUserRequest req)(api.put="/user/update"),
-    UserInfoResponse userInfo(1: UserInfoRequest req)(api.get="/user/info"),
+    UserInfoResponse GetUserInfo(1: UserInfoRequest req)(api.get="/user/info"),
     DeleteUserResponse deleteUser(1: DeleteUserRequest req)(api.delete="/user/delete"),
     RefreshTokenResponse refreshToken(1: RefreshTokenRequest req)(api.post="/user/refresh"),
 }

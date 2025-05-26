@@ -59,16 +59,14 @@ func _adminupdateuserMw() []app.HandlerFunc {
 	return nil
 }
 
-func _userinfoMw() []app.HandlerFunc {
-	// your code...
-	return append(make([]app.HandlerFunc, 0),
-		auth.AccessTokenAuth(),
-	)
-}
-
 func _refreshtokenMw() []app.HandlerFunc {
 	// your code...
 	return append(make([]app.HandlerFunc, 0),
 		auth.RefreshTokenAuth(),
 	)
+}
+
+func _getuserinfoMw() []app.HandlerFunc {
+	// your code...
+	return nil
 }

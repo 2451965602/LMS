@@ -10,7 +10,7 @@ import (
 
 	"github.com/cloudwego/hertz/pkg/app"
 
-	user "github.com/2451965602/LMS/biz/model/user"
+	"github.com/2451965602/LMS/biz/model/user"
 )
 
 // AdminUpdateUser .

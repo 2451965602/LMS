@@ -15,26 +15,6 @@ func rootMw() []app.HandlerFunc {
 	)
 }
 
-func _reserveMw() []app.HandlerFunc {
-	// your code...
-	return nil
-}
-
-func _reserve0Mw() []app.HandlerFunc {
-	// your code...
-	return nil
-}
-
-func _cancelreservationMw() []app.HandlerFunc {
-	// your code...
-	return nil
-}
-
-func _getreservationMw() []app.HandlerFunc {
-	// your code...
-	return nil
-}
-
 func _bookMw() []app.HandlerFunc {
 	// your code...
 	return nil

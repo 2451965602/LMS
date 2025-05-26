@@ -1,11 +1,12 @@
 package config
 
 import (
+	"os"
+	"path/filepath"
+
 	"github.com/cloudwego/hertz/pkg/common/hlog"
 	"github.com/fsnotify/fsnotify"
 	"github.com/spf13/viper"
-	"os"
-	"path/filepath"
 )
 
 var (
@@ -48,7 +49,7 @@ func Init() {
 // createDefaultConfig 创建默认的配置文件
 func createDefaultConfig(configPath string) error {
 	// 创建配置文件所在的目录
-	if err := os.MkdirAll(filepath.Dir(configPath), 0755); err != nil {
+	if err := os.MkdirAll(filepath.Dir(configPath), 0o755); err != nil {
 		return err
 	}
 

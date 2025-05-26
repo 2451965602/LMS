@@ -220,22 +220,6 @@ func SearchBook(ctx context.Context, req book.GetBookRequest) ([]*Book, int64, e
 	return resultBooks, total, nil
 }
 
-// IsBookExist 检查指定 ID 的书籍是否存在
-// 1. 根据 BookID 查询书籍数量。
-// 2. 如果数量大于 0，返回 true，否则返回 false。
-func IsBookExist(ctx context.Context, bookId int64) (bool, error) {
-	var count int64
-	err := db.WithContext(ctx).
-		Table(Book{}.TableName()).
-		Where("id = ?", bookId).
-		Count(&count).
-		Error
-	if err != nil {
-		return false, errno.Errorf(errno.InternalDatabaseErrorCode, "check book existence failed: %v", err)
-	}
-	return count > 0, nil
-}
-
 // GetBookById 根据 ID 获取书籍信息
 // 1. 根据 BookID 查询书籍。
 // 2. 如果书籍存在，返回书籍信息，否则返回错误。

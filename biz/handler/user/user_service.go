@@ -118,9 +118,9 @@ func DeleteUser(ctx context.Context, c *app.RequestContext) {
 	pack.SendResponse(c, resp)
 }
 
-// UserInfo .
+// GetUserInfo .
 // @router /user/info [GET]
-func UserInfo(ctx context.Context, c *app.RequestContext) {
+func GetUserInfo(ctx context.Context, c *app.RequestContext) {
 	var err error
 	var req user.UserInfoRequest
 	err = c.BindAndValidate(&req)

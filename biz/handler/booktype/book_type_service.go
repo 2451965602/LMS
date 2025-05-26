@@ -10,7 +10,7 @@ import (
 
 	"github.com/cloudwego/hertz/pkg/app"
 
-	booktype "github.com/2451965602/LMS/biz/model/booktype"
+	"github.com/2451965602/LMS/biz/model/booktype"
 )
 
 // AddBookType .

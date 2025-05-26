@@ -4,6 +4,8 @@ import (
 	"github.com/cloudwego/hertz/pkg/common/hlog"
 	"github.com/fsnotify/fsnotify"
 	"github.com/spf13/viper"
+	"os"
+	"path/filepath"
 )
 
 var (
@@ -14,8 +16,18 @@ var (
 
 func Init() {
 	runtimeViper = viper.New()
-	runtimeViper.SetConfigFile("./config/config.yaml")
+	configPath := "./config/config.yaml"
+	runtimeViper.SetConfigFile(configPath)
 	runtimeViper.SetConfigType("yaml")
+
+	if _, err := os.Stat(configPath); os.IsNotExist(err) {
+		if err := createDefaultConfig(configPath); err != nil {
+			hlog.Errorf("config.Init: failed to create default config: %v", err)
+			return
+		}
+		hlog.Info("config.Init: default config file created")
+		os.Exit(0)
+	}
 
 	if err := runtimeViper.ReadInConfig(); err != nil {
 		hlog.Infof("config.Init: config: read error: %v\n", err)
@@ -24,11 +36,36 @@ func Init() {
 	configMapping()
 
 	runtimeViper.OnConfigChange(func(e fsnotify.Event) {
-		// 我们无法确定监听到配置变更时是否已经初始化完毕，所以此处需要做一个判断
 		hlog.Infof("config: notice config changed: %v\n", e.String())
 		configMapping() // 重新映射配置
 	})
 	runtimeViper.WatchConfig()
+}
+
+func createDefaultConfig(configPath string) error {
+	if err := os.MkdirAll(filepath.Dir(configPath), 0755); err != nil {
+		return err
+	}
+
+	defaultConfig := config{
+		Server: server{
+			Addr: "127.0.0.1",
+			Port: 8080,
+		},
+		MySQL: mySQL{
+			Addr:     "127.0.0.1:3306",
+			Database: "LMS",
+			Username: "root",
+			Password: "root",
+			Charset:  "utf8mb4",
+		},
+	}
+
+	v := viper.New()
+	v.Set("server", defaultConfig.Server)
+	v.Set("mysql", defaultConfig.MySQL)
+
+	return v.WriteConfigAs(configPath)
 }
 
 // configMapping 用于将配置映射到全局变量

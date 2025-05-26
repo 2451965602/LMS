@@ -3,6 +3,7 @@
 package main
 
 import (
+	"github.com/2451965602/LMS/pkg/utils"
 	"github.com/cloudwego/hertz/pkg/app/server"
 	"github.com/cloudwego/hertz/pkg/common/hlog"
 
@@ -22,7 +23,12 @@ func init() {
 }
 
 func main() {
-	h := server.Default()
+	addr, err := utils.GetServerAddr()
+	if err != nil {
+		hlog.Errorf("utils.GetServerAddr: %v", err)
+		panic(err)
+	}
+	h := server.Default(server.WithHostPorts(addr))
 
 	register(h)
 	h.Spin()

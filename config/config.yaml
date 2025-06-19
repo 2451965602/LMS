@@ -1,0 +1,9 @@
+mysql:
+    addr: 127.0.0.1:3306
+    database: LMS
+    username: root
+    password: root
+    charset: utf8mb4
+server:
+    addr: 127.0.0.1
+    port: 8080

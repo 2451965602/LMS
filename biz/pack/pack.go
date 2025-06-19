@@ -23,7 +23,8 @@ func BuildBaseResp(err error) *model.BaseResp {
 }
 
 func SendFailResponse(c *app.RequestContext, err error) {
-	resp := BuildBaseResp(err)
+	resp := new(model.ErrorResp)
+	resp.Base = BuildBaseResp(err)
 	SendResponse(c, resp)
 }
 

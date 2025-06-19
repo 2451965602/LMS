@@ -5,6 +5,10 @@ struct BaseResp {
     2: required string msg,
 }
 
+struct ErrorResp {
+    1: BaseResp base,
+}
+
 struct User {
     1: required i64 id
     2: required string username

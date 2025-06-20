@@ -138,7 +138,7 @@ func (s *BookTypeService) SearchBookType(ctx context.Context, req booktype.GetBo
 		}
 	}
 
-	bookTypes, total, err := db.SearchBookType(ctx, req.Title, req.Author, req.ISBN, req.PageNum, req.PageSize) // 调用数据库操作函数搜索图书类型
+	bookTypes, total, err := db.SearchBookType(ctx, req.Title, req.Author, req.ISBN, req.Category, req.PageNum, req.PageSize) // 调用数据库操作函数搜索图书类型
 	if err != nil {
 		return nil, 0, err
 	}

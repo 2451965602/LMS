@@ -120,7 +120,7 @@ func DeleteBookType(ctx context.Context, isbn string) error {
 // 2. 查询总记录数。
 // 3. 根据分页参数查询书籍类型列表。
 // 4. 返回书籍类型列表和总记录数。
-func SearchBookType(ctx context.Context, title, author *string, isbn *string, pageNum, pageSize int64) ([]*BookType, int64, error) {
+func SearchBookType(ctx context.Context, title, author, isbn, category *string, pageNum, pageSize int64) ([]*BookType, int64, error) {
 	var results []BookType
 	var total int64
 
@@ -139,6 +139,10 @@ func SearchBookType(ctx context.Context, title, author *string, isbn *string, pa
 	if author != nil && *author != "" {
 		query = query.Where("author LIKE ?", "%"+*author+"%")
 		countQuery = countQuery.Where("author LIKE ?", "%"+*author+"%")
+	}
+	if category != nil && *category != "" {
+		query = query.Where("category LIKE ?", "%"+*category+"%")
+		countQuery = countQuery.Where("category LIKE ?", "%"+*category+"%")
 	}
 
 	// 查询总记录数

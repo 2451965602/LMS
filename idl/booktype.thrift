@@ -40,8 +40,9 @@ struct GetBookTypeRequest{
     1: optional string ISBN,
     2: optional string title,
     3: optional string author,
-    4: required i64 page_size,
-    5: required i64 page_num,
+    4: optional string category,
+    5: required i64 page_size,
+    6: required i64 page_num,
 }
 struct GetBookTypeResponse{
     1: model.BaseResp base,

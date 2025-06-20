@@ -3,6 +3,7 @@ package service
 import (
 	"context"
 	"github.com/2451965602/LMS/pkg/errno"
+	"strings"
 
 	"github.com/cloudwego/hertz/pkg/app"
 
@@ -34,6 +35,7 @@ func NewBookService(ctx context.Context, c *app.RequestContext) *BookService {
 //   - error: 错误信息，如果添加失败会返回错误
 func (s *BookService) AddBook(ctx context.Context, req book.AddBookRequest) (int64, error) {
 	// 检查ISBN格式是否正确
+	req.ISBN = strings.Replace(req.ISBN, "-", "", -1)
 	if !IsValidISBN(req.ISBN) {
 		return 0, errno.Errorf(errno.ServiceInvalidISBN, "invalid ISBN format") // 如果ISBN格式不正确，返回错误
 	}
@@ -89,6 +91,7 @@ func (s *BookService) DeleteBook(ctx context.Context, req book.DeleteBookRequest
 func (s *BookService) SearchBook(ctx context.Context, req book.GetBookRequest) ([]*db.Book, int64, error) {
 
 	if req.ISBN != nil {
+		*req.ISBN = strings.Replace(*req.ISBN, "-", "", -1)
 		if !IsValidISBN(*req.ISBN) { // 检查ISBN格式是否正确
 			return nil, 0, errno.Errorf(errno.ServiceInvalidISBN, "invalid ISBN format") // 如果ISBN格式不正确，返回错误
 		}

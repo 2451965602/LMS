@@ -141,8 +141,8 @@ func SearchBookType(ctx context.Context, title, author, isbn, category *string, 
 		countQuery = countQuery.Where("author LIKE ?", "%"+*author+"%")
 	}
 	if category != nil && *category != "" {
-		query = query.Where("category LIKE ?", "%"+*category+"%")
-		countQuery = countQuery.Where("category LIKE ?", "%"+*category+"%")
+		query = query.Where("category = ?", *category)
+		countQuery = countQuery.Where("category = ?", *category)
 	}
 
 	// 查询总记录数

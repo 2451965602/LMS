@@ -2,6 +2,7 @@ package service
 
 import (
 	"context"
+	"strings"
 
 	"github.com/cloudwego/hertz/pkg/app"
 
@@ -35,6 +36,7 @@ func NewBookTypeService(ctx context.Context, c *app.RequestContext) *BookTypeSer
 func (s *BookTypeService) AddBookType(ctx context.Context, req booktype.AddBookTypeRequest) (*db.BookType, error) {
 
 	// 检查ISBN格式是否正确
+	req.ISBN = strings.Replace(req.ISBN, "-", "", -1)
 	if !IsValidISBN(req.ISBN) {
 		return nil, errno.Errorf(errno.ServiceInvalidISBN, "invalid ISBN format") // 如果ISBN格式不正确，返回错误
 	}
@@ -69,6 +71,7 @@ func (s *BookTypeService) AddBookType(ctx context.Context, req booktype.AddBookT
 func (s *BookTypeService) UpdateBookType(ctx context.Context, req booktype.UpdateBookTypeRequest) (*db.BookType, error) {
 
 	// 检查ISBN格式是否正确
+	req.ISBN = strings.Replace(req.ISBN, "-", "", -1)
 	if !IsValidISBN(req.ISBN) {
 		return nil, errno.Errorf(errno.ServiceInvalidISBN, "invalid ISBN format") // 如果ISBN格式不正确，返回错误
 	}
@@ -93,6 +96,7 @@ func (s *BookTypeService) UpdateBookType(ctx context.Context, req booktype.Updat
 //   - error: 错误信息，如果删除失败会返回错误
 func (s *BookTypeService) DeleteBookType(ctx context.Context, req booktype.DeleteBookTypeRequest) error {
 	// 检查ISBN格式是否正确
+	req.ISBN = strings.Replace(req.ISBN, "-", "", -1)
 	if !IsValidISBN(req.ISBN) {
 		return errno.Errorf(errno.ServiceInvalidISBN, "invalid ISBN format") // 如果ISBN格式不正确，返回错误
 	}
@@ -133,6 +137,7 @@ func (s *BookTypeService) SearchBookType(ctx context.Context, req booktype.GetBo
 
 	if req.ISBN != nil {
 		// 检查ISBN格式是否正确
+		*req.ISBN = strings.Replace(*req.ISBN, "-", "", -1)
 		if !IsValidISBN(*req.ISBN) {
 			return nil, 0, errno.Errorf(errno.ServiceInvalidISBN, "invalid ISBN format") // 如果ISBN格式不正确，返回错误
 		}
@@ -156,6 +161,7 @@ func (s *BookTypeService) SearchBookType(ctx context.Context, req booktype.GetBo
 //   - error: 错误信息，如果获取失败会返回错误
 func (s *BookTypeService) GetBookTypeByISBN(ctx context.Context, isbn string) (*db.BookType, error) {
 	// 检查ISBN格式是否正确
+	isbn = strings.Replace(isbn, "-", "", -1)
 	if !IsValidISBN(isbn) {
 		return nil, errno.Errorf(errno.ServiceInvalidISBN, "invalid ISBN format") // 如果ISBN格式不正确，返回错误
 	}

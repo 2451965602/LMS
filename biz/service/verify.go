@@ -4,7 +4,6 @@ import (
 	"github.com/2451965602/LMS/pkg/errno"
 	"regexp"
 	"strconv"
-	"strings"
 )
 
 func CheckMobile(phone string) bool {
@@ -67,7 +66,6 @@ func RegisterCheck(username, phone string) error {
 }
 
 func IsValidISBN(isbn string) bool {
-	isbn = strings.Replace(isbn, "-", "", -1) // 去掉ISBN中的短横线
 	length := len(isbn)
 
 	switch length {

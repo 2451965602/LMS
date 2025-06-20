@@ -48,7 +48,7 @@ func (s *UserService) Register(ctx context.Context, username, password, phone st
 		return 0, errno.Errorf(errno.ServiceUserExist, "user already exist") // 如果用户已存在，返回错误
 	}
 
-	id, err := db.RegisterUser(ctx, username, password) // 调用数据库操作函数注册用户
+	id, err := db.RegisterUser(ctx, username, password, phone) // 调用数据库操作函数注册用户
 	if err != nil {
 		return 0, err
 	}

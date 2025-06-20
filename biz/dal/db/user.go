@@ -43,7 +43,7 @@ func LoginUser(ctx context.Context, username, password string) (*User, error) {
 // 2. 创建新的用户实例并填充请求参数。
 // 3. 将用户信息插入到数据库。
 // 4. 如果插入成功，返回用户的 ID，否则返回错误。
-func RegisterUser(ctx context.Context, username, password string) (int64, error) {
+func RegisterUser(ctx context.Context, username, password, phone string) (int64, error) {
 	hashedPassword, err := crypt.PasswordHash(password)
 	if err != nil {
 		return 0, errno.Errorf(errno.InternalPasswordCryptErrorCode, "encrypt password failed: %v", err)
@@ -52,6 +52,7 @@ func RegisterUser(ctx context.Context, username, password string) (int64, error)
 	u := User{
 		Name:       username,
 		Password:   hashedPassword,
+		Phone:      &phone,
 		Permission: "member",
 		Status:     "active",
 	}

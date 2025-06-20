@@ -36,8 +36,12 @@ jobs:
        go version
     
     - name: Build
-      run:
-        go build -o LMS-${{ matrix.goos }}-${{ matrix.goarch }}
+      run: |
+        if [ "${{ matrix.goos }}" = "windows" ]; then
+          go build -o LMS-${{ matrix.goos }}-${{ matrix.goarch }}.exe
+        else
+          go build -o LMS-${{ matrix.goos }}-${{ matrix.goarch }}
+        fi
       env:
         GOOS: ${{ matrix.goos }}
         GOARCH: ${{ matrix.goarch }}    
@@ -46,4 +50,4 @@ jobs:
       uses: actions/upload-artifact@v4
       with:
         name: LMS-${{ matrix.goos }}-${{ matrix.goarch }}
-        path: LMS-${{ matrix.goos }}-${{ matrix.goarch }}
+        path: LMS-${{ matrix.goos }}-${{ matrix.goarch }}*

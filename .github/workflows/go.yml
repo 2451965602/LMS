@@ -16,14 +16,14 @@ jobs:
     strategy:
       matrix:
         include:
-          - goarch: amd64
-            goos: linux
-          - goarch: amd64
-            goos: darwin
-          - goarch: arm64
-            goos: linux
-          - goarch: arm64
-            goos: darwin
+          - goos: windows
+            goarch: amd64
+          - goos: windows
+            goarch: arm64
+          - goos: linux
+            goarch: amd64
+          - goos: linux
+            goarch: arm64
     # 使用checkout
     steps:
     - uses: actions/checkout@v3

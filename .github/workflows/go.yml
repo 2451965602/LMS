@@ -40,7 +40,7 @@ jobs:
         GOARCH: ${{ matrix.goarch }}    
         
     - name: Save artifact
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: LMS-${{ matrix.goos }}-${{ matrix.goarch }}.tgz
         path: LMS-${{ matrix.goos }}-${{ matrix.goarch }}.tgz

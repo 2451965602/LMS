@@ -2,7 +2,6 @@ package service
 
 import (
 	"context"
-
 	"github.com/cloudwego/hertz/pkg/app"
 
 	"github.com/2451965602/LMS/biz/dal/db"
@@ -34,7 +33,13 @@ func NewUserService(ctx context.Context, c *app.RequestContext) *UserService {
 // 返回值：
 //   - int64: 注册成功用户的ID
 //   - error: 错误信息，如果用户已存在或注册失败会返回错误
-func (s *UserService) Register(ctx context.Context, username, password string) (int64, error) {
+func (s *UserService) Register(ctx context.Context, username, password, phone string) (int64, error) {
+
+	err := RegisterCheck(username, phone)
+	if err != nil {
+		return 0, err
+	}
+
 	exit, err := db.IsUserExist(ctx, username) // 检查用户是否已存在
 	if err != nil {
 		return 0, err

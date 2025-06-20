@@ -2,6 +2,7 @@ package service
 
 import (
 	"context"
+	"github.com/2451965602/LMS/pkg/errno"
 
 	"github.com/cloudwego/hertz/pkg/app"
 
@@ -32,6 +33,10 @@ func NewBookService(ctx context.Context, c *app.RequestContext) *BookService {
 //   - int64: 添加成功的图书ID
 //   - error: 错误信息，如果添加失败会返回错误
 func (s *BookService) AddBook(ctx context.Context, req book.AddBookRequest) (int64, error) {
+	// 检查ISBN格式是否正确
+	if !IsValidISBN(req.ISBN) {
+		return 0, errno.Errorf(errno.ServiceInvalidISBN, "invalid ISBN format") // 如果ISBN格式不正确，返回错误
+	}
 	bookId, err := db.AddBook(ctx, req) // 调用数据库操作函数添加图书
 	if err != nil {
 		return -1, err
@@ -49,6 +54,7 @@ func (s *BookService) AddBook(ctx context.Context, req book.AddBookRequest) (int
 //   - *db.Book: 更新成功的图书信息
 //   - error: 错误信息，如果更新失败会返回错误
 func (s *BookService) UpdateBook(ctx context.Context, req book.UpdateBookRequest) (*db.Book, error) {
+
 	bk, err := db.UpdateBook(ctx, req) // 调用数据库操作函数更新图书
 	if err != nil {
 		return nil, err
@@ -81,6 +87,12 @@ func (s *BookService) DeleteBook(ctx context.Context, req book.DeleteBookRequest
 //   - int64: 总记录数
 //   - error: 错误信息，如果搜索失败会返回错误
 func (s *BookService) SearchBook(ctx context.Context, req book.GetBookRequest) ([]*db.Book, int64, error) {
+
+	if req.ISBN != nil {
+		if !IsValidISBN(*req.ISBN) { // 检查ISBN格式是否正确
+			return nil, 0, errno.Errorf(errno.ServiceInvalidISBN, "invalid ISBN format") // 如果ISBN格式不正确，返回错误
+		}
+	}
 	books, total, err := db.SearchBook(ctx, req) // 调用数据库操作函数搜索图书
 	if err != nil {
 		return nil, 0, err

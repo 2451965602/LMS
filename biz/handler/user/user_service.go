@@ -28,7 +28,7 @@ func Register(ctx context.Context, c *app.RequestContext) {
 
 	resp := new(user.RegisterResponse)
 
-	userId, err := service.NewUserService(ctx, c).Register(ctx, req.Username, req.Password)
+	userId, err := service.NewUserService(ctx, c).Register(ctx, req.Username, req.Password, req.Phone)
 	if err != nil {
 		pack.SendFailResponse(c, err)
 		return

@@ -1,5 +1,5 @@
 -- 用户表
-CREATE TABLE LMS.Users (
+CREATE TABLE Users (
                            id INT AUTO_INCREMENT PRIMARY KEY,
                            name VARCHAR(50) NOT NULL UNIQUE,
                            password VARCHAR(255) NOT NULL,
@@ -10,7 +10,7 @@ CREATE TABLE LMS.Users (
 ) COMMENT '系统用户信息表';
 
 -- 图书类型表（元数据）
-CREATE TABLE LMS.BookTypes (
+CREATE TABLE BookTypes (
                                ISBN VARCHAR(20) PRIMARY KEY,
                                title VARCHAR(100) NOT NULL,
                                author VARCHAR(50) NOT NULL,
@@ -23,7 +23,7 @@ CREATE TABLE LMS.BookTypes (
 ) COMMENT '图书元数据信息表';
 
 -- 图书实体表（具体副本）
-CREATE TABLE LMS.Books (
+CREATE TABLE Books (
                            id INT AUTO_INCREMENT PRIMARY KEY,
                            ISBN VARCHAR(20) NOT NULL,
                            location VARCHAR(50) NOT NULL,
@@ -35,7 +35,7 @@ CREATE TABLE LMS.Books (
 ) COMMENT '图书实体副本表';
 
 -- 借阅记录表
-CREATE TABLE LMS.BorrowRecords (
+CREATE TABLE BorrowRecords (
                                    id INT AUTO_INCREMENT PRIMARY KEY,
                                    user_id INT NOT NULL,
                                    book_id INT NOT NULL,
@@ -51,9 +51,9 @@ CREATE TABLE LMS.BorrowRecords (
 
 
 -- 创建索引
-CREATE INDEX idx_users_name ON LMS.Users(name);
-CREATE INDEX idx_booktypes_title ON LMS.BookTypes(title);
-CREATE INDEX idx_booktypes_author ON LMS.BookTypes(author);
-CREATE INDEX idx_books_status ON LMS.Books(status);
-CREATE INDEX idx_borrowrecords_status ON LMS.BorrowRecords(status);
-CREATE INDEX idx_borrowrecords_user_book ON LMS.BorrowRecords(user_id, book_id);
+CREATE INDEX idx_users_name ON Users(name);
+CREATE INDEX idx_booktypes_title ON BookTypes(title);
+CREATE INDEX idx_booktypes_author ON BookTypes(author);
+CREATE INDEX idx_books_status ON Books(status);
+CREATE INDEX idx_borrowrecords_status ON BorrowRecords(status);
+CREATE INDEX idx_borrowrecords_user_book ON BorrowRecords(user_id, book_id);

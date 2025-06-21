@@ -39,6 +39,7 @@ CREATE TABLE BorrowRecords (
                                    id INT AUTO_INCREMENT PRIMARY KEY,
                                    user_id INT NOT NULL,
                                    book_id INT NOT NULL,
+                                   title VARCHAR(100) NOT NULL,
                                    checkout_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
                                    due_date TIMESTAMP NOT NULL,
                                    renewal_count INT DEFAULT 0,

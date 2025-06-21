@@ -1840,12 +1840,13 @@ type BorrowRecord struct {
 	ID           int64   `thrift:"id,1,required" form:"id,required" json:"id,required" query:"id,required"`
 	UserID       int64   `thrift:"user_id,2,required" form:"user_id,required" json:"user_id,required" query:"user_id,required"`
 	BookID       int64   `thrift:"book_id,3,required" form:"book_id,required" json:"book_id,required" query:"book_id,required"`
-	CheckoutDate string  `thrift:"checkout_date,4,required" form:"checkout_date,required" json:"checkout_date,required" query:"checkout_date,required"`
-	DueDate      string  `thrift:"due_date,5,required" form:"due_date,required" json:"due_date,required" query:"due_date,required"`
-	ReturnDate   string  `thrift:"return_date,6,required" form:"return_date,required" json:"return_date,required" query:"return_date,required"`
-	Status       string  `thrift:"status,7,required" form:"status,required" json:"status,required" query:"status,required"`
-	RenewalCount int64   `thrift:"renewal_count,8,required" form:"renewal_count,required" json:"renewal_count,required" query:"renewal_count,required"`
-	LateFee      float64 `thrift:"late_fee,9,required" form:"late_fee,required" json:"late_fee,required" query:"late_fee,required"`
+	Title        string  `thrift:"title,4,required" form:"title,required" json:"title,required" query:"title,required"`
+	CheckoutDate string  `thrift:"checkout_date,5,required" form:"checkout_date,required" json:"checkout_date,required" query:"checkout_date,required"`
+	DueDate      string  `thrift:"due_date,6,required" form:"due_date,required" json:"due_date,required" query:"due_date,required"`
+	ReturnDate   string  `thrift:"return_date,7,required" form:"return_date,required" json:"return_date,required" query:"return_date,required"`
+	Status       string  `thrift:"status,8,required" form:"status,required" json:"status,required" query:"status,required"`
+	RenewalCount int64   `thrift:"renewal_count,9,required" form:"renewal_count,required" json:"renewal_count,required" query:"renewal_count,required"`
+	LateFee      float64 `thrift:"late_fee,10,required" form:"late_fee,required" json:"late_fee,required" query:"late_fee,required"`
 }
 
 func NewBorrowRecord() *BorrowRecord {
@@ -1865,6 +1866,10 @@ func (p *BorrowRecord) GetUserID() (v int64) {
 
 func (p *BorrowRecord) GetBookID() (v int64) {
 	return p.BookID
+}
+
+func (p *BorrowRecord) GetTitle() (v string) {
+	return p.Title
 }
 
 func (p *BorrowRecord) GetCheckoutDate() (v string) {
@@ -1892,15 +1897,16 @@ func (p *BorrowRecord) GetLateFee() (v float64) {
 }
 
 var fieldIDToName_BorrowRecord = map[int16]string{
-	1: "id",
-	2: "user_id",
-	3: "book_id",
-	4: "checkout_date",
-	5: "due_date",
-	6: "return_date",
-	7: "status",
-	8: "renewal_count",
-	9: "late_fee",
+	1:  "id",
+	2:  "user_id",
+	3:  "book_id",
+	4:  "title",
+	5:  "checkout_date",
+	6:  "due_date",
+	7:  "return_date",
+	8:  "status",
+	9:  "renewal_count",
+	10: "late_fee",
 }
 
 func (p *BorrowRecord) Read(iprot thrift.TProtocol) (err error) {
@@ -1909,6 +1915,7 @@ func (p *BorrowRecord) Read(iprot thrift.TProtocol) (err error) {
 	var issetID bool = false
 	var issetUserID bool = false
 	var issetBookID bool = false
+	var issetTitle bool = false
 	var issetCheckoutDate bool = false
 	var issetDueDate bool = false
 	var issetReturnDate bool = false
@@ -1962,7 +1969,7 @@ func (p *BorrowRecord) Read(iprot thrift.TProtocol) (err error) {
 				if err = p.ReadField4(iprot); err != nil {
 					goto ReadFieldError
 				}
-				issetCheckoutDate = true
+				issetTitle = true
 			} else if err = iprot.Skip(fieldTypeId); err != nil {
 				goto SkipFieldError
 			}
@@ -1971,7 +1978,7 @@ func (p *BorrowRecord) Read(iprot thrift.TProtocol) (err error) {
 				if err = p.ReadField5(iprot); err != nil {
 					goto ReadFieldError
 				}
-				issetDueDate = true
+				issetCheckoutDate = true
 			} else if err = iprot.Skip(fieldTypeId); err != nil {
 				goto SkipFieldError
 			}
@@ -1980,7 +1987,7 @@ func (p *BorrowRecord) Read(iprot thrift.TProtocol) (err error) {
 				if err = p.ReadField6(iprot); err != nil {
 					goto ReadFieldError
 				}
-				issetReturnDate = true
+				issetDueDate = true
 			} else if err = iprot.Skip(fieldTypeId); err != nil {
 				goto SkipFieldError
 			}
@@ -1989,22 +1996,31 @@ func (p *BorrowRecord) Read(iprot thrift.TProtocol) (err error) {
 				if err = p.ReadField7(iprot); err != nil {
 					goto ReadFieldError
 				}
-				issetStatus = true
+				issetReturnDate = true
 			} else if err = iprot.Skip(fieldTypeId); err != nil {
 				goto SkipFieldError
 			}
 		case 8:
-			if fieldTypeId == thrift.I64 {
+			if fieldTypeId == thrift.STRING {
 				if err = p.ReadField8(iprot); err != nil {
+					goto ReadFieldError
+				}
+				issetStatus = true
+			} else if err = iprot.Skip(fieldTypeId); err != nil {
+				goto SkipFieldError
+			}
+		case 9:
+			if fieldTypeId == thrift.I64 {
+				if err = p.ReadField9(iprot); err != nil {
 					goto ReadFieldError
 				}
 				issetRenewalCount = true
 			} else if err = iprot.Skip(fieldTypeId); err != nil {
 				goto SkipFieldError
 			}
-		case 9:
+		case 10:
 			if fieldTypeId == thrift.DOUBLE {
-				if err = p.ReadField9(iprot); err != nil {
+				if err = p.ReadField10(iprot); err != nil {
 					goto ReadFieldError
 				}
 				issetLateFee = true
@@ -2039,33 +2055,38 @@ func (p *BorrowRecord) Read(iprot thrift.TProtocol) (err error) {
 		goto RequiredFieldNotSetError
 	}
 
-	if !issetCheckoutDate {
+	if !issetTitle {
 		fieldId = 4
 		goto RequiredFieldNotSetError
 	}
 
-	if !issetDueDate {
+	if !issetCheckoutDate {
 		fieldId = 5
 		goto RequiredFieldNotSetError
 	}
 
-	if !issetReturnDate {
+	if !issetDueDate {
 		fieldId = 6
 		goto RequiredFieldNotSetError
 	}
 
-	if !issetStatus {
+	if !issetReturnDate {
 		fieldId = 7
 		goto RequiredFieldNotSetError
 	}
 
-	if !issetRenewalCount {
+	if !issetStatus {
 		fieldId = 8
 		goto RequiredFieldNotSetError
 	}
 
-	if !issetLateFee {
+	if !issetRenewalCount {
 		fieldId = 9
+		goto RequiredFieldNotSetError
+	}
+
+	if !issetLateFee {
+		fieldId = 10
 		goto RequiredFieldNotSetError
 	}
 	return nil
@@ -2127,7 +2148,7 @@ func (p *BorrowRecord) ReadField4(iprot thrift.TProtocol) error {
 	} else {
 		_field = v
 	}
-	p.CheckoutDate = _field
+	p.Title = _field
 	return nil
 }
 func (p *BorrowRecord) ReadField5(iprot thrift.TProtocol) error {
@@ -2138,7 +2159,7 @@ func (p *BorrowRecord) ReadField5(iprot thrift.TProtocol) error {
 	} else {
 		_field = v
 	}
-	p.DueDate = _field
+	p.CheckoutDate = _field
 	return nil
 }
 func (p *BorrowRecord) ReadField6(iprot thrift.TProtocol) error {
@@ -2149,7 +2170,7 @@ func (p *BorrowRecord) ReadField6(iprot thrift.TProtocol) error {
 	} else {
 		_field = v
 	}
-	p.ReturnDate = _field
+	p.DueDate = _field
 	return nil
 }
 func (p *BorrowRecord) ReadField7(iprot thrift.TProtocol) error {
@@ -2160,10 +2181,21 @@ func (p *BorrowRecord) ReadField7(iprot thrift.TProtocol) error {
 	} else {
 		_field = v
 	}
-	p.Status = _field
+	p.ReturnDate = _field
 	return nil
 }
 func (p *BorrowRecord) ReadField8(iprot thrift.TProtocol) error {
+
+	var _field string
+	if v, err := iprot.ReadString(); err != nil {
+		return err
+	} else {
+		_field = v
+	}
+	p.Status = _field
+	return nil
+}
+func (p *BorrowRecord) ReadField9(iprot thrift.TProtocol) error {
 
 	var _field int64
 	if v, err := iprot.ReadI64(); err != nil {
@@ -2174,7 +2206,7 @@ func (p *BorrowRecord) ReadField8(iprot thrift.TProtocol) error {
 	p.RenewalCount = _field
 	return nil
 }
-func (p *BorrowRecord) ReadField9(iprot thrift.TProtocol) error {
+func (p *BorrowRecord) ReadField10(iprot thrift.TProtocol) error {
 
 	var _field float64
 	if v, err := iprot.ReadDouble(); err != nil {
@@ -2226,6 +2258,10 @@ func (p *BorrowRecord) Write(oprot thrift.TProtocol) (err error) {
 		}
 		if err = p.writeField9(oprot); err != nil {
 			fieldId = 9
+			goto WriteFieldError
+		}
+		if err = p.writeField10(oprot); err != nil {
+			fieldId = 10
 			goto WriteFieldError
 		}
 	}
@@ -2295,10 +2331,10 @@ WriteFieldEndError:
 	return thrift.PrependError(fmt.Sprintf("%T write field 3 end error: ", p), err)
 }
 func (p *BorrowRecord) writeField4(oprot thrift.TProtocol) (err error) {
-	if err = oprot.WriteFieldBegin("checkout_date", thrift.STRING, 4); err != nil {
+	if err = oprot.WriteFieldBegin("title", thrift.STRING, 4); err != nil {
 		goto WriteFieldBeginError
 	}
-	if err := oprot.WriteString(p.CheckoutDate); err != nil {
+	if err := oprot.WriteString(p.Title); err != nil {
 		return err
 	}
 	if err = oprot.WriteFieldEnd(); err != nil {
@@ -2311,10 +2347,10 @@ WriteFieldEndError:
 	return thrift.PrependError(fmt.Sprintf("%T write field 4 end error: ", p), err)
 }
 func (p *BorrowRecord) writeField5(oprot thrift.TProtocol) (err error) {
-	if err = oprot.WriteFieldBegin("due_date", thrift.STRING, 5); err != nil {
+	if err = oprot.WriteFieldBegin("checkout_date", thrift.STRING, 5); err != nil {
 		goto WriteFieldBeginError
 	}
-	if err := oprot.WriteString(p.DueDate); err != nil {
+	if err := oprot.WriteString(p.CheckoutDate); err != nil {
 		return err
 	}
 	if err = oprot.WriteFieldEnd(); err != nil {
@@ -2327,10 +2363,10 @@ WriteFieldEndError:
 	return thrift.PrependError(fmt.Sprintf("%T write field 5 end error: ", p), err)
 }
 func (p *BorrowRecord) writeField6(oprot thrift.TProtocol) (err error) {
-	if err = oprot.WriteFieldBegin("return_date", thrift.STRING, 6); err != nil {
+	if err = oprot.WriteFieldBegin("due_date", thrift.STRING, 6); err != nil {
 		goto WriteFieldBeginError
 	}
-	if err := oprot.WriteString(p.ReturnDate); err != nil {
+	if err := oprot.WriteString(p.DueDate); err != nil {
 		return err
 	}
 	if err = oprot.WriteFieldEnd(); err != nil {
@@ -2343,10 +2379,10 @@ WriteFieldEndError:
 	return thrift.PrependError(fmt.Sprintf("%T write field 6 end error: ", p), err)
 }
 func (p *BorrowRecord) writeField7(oprot thrift.TProtocol) (err error) {
-	if err = oprot.WriteFieldBegin("status", thrift.STRING, 7); err != nil {
+	if err = oprot.WriteFieldBegin("return_date", thrift.STRING, 7); err != nil {
 		goto WriteFieldBeginError
 	}
-	if err := oprot.WriteString(p.Status); err != nil {
+	if err := oprot.WriteString(p.ReturnDate); err != nil {
 		return err
 	}
 	if err = oprot.WriteFieldEnd(); err != nil {
@@ -2359,10 +2395,10 @@ WriteFieldEndError:
 	return thrift.PrependError(fmt.Sprintf("%T write field 7 end error: ", p), err)
 }
 func (p *BorrowRecord) writeField8(oprot thrift.TProtocol) (err error) {
-	if err = oprot.WriteFieldBegin("renewal_count", thrift.I64, 8); err != nil {
+	if err = oprot.WriteFieldBegin("status", thrift.STRING, 8); err != nil {
 		goto WriteFieldBeginError
 	}
-	if err := oprot.WriteI64(p.RenewalCount); err != nil {
+	if err := oprot.WriteString(p.Status); err != nil {
 		return err
 	}
 	if err = oprot.WriteFieldEnd(); err != nil {
@@ -2375,10 +2411,10 @@ WriteFieldEndError:
 	return thrift.PrependError(fmt.Sprintf("%T write field 8 end error: ", p), err)
 }
 func (p *BorrowRecord) writeField9(oprot thrift.TProtocol) (err error) {
-	if err = oprot.WriteFieldBegin("late_fee", thrift.DOUBLE, 9); err != nil {
+	if err = oprot.WriteFieldBegin("renewal_count", thrift.I64, 9); err != nil {
 		goto WriteFieldBeginError
 	}
-	if err := oprot.WriteDouble(p.LateFee); err != nil {
+	if err := oprot.WriteI64(p.RenewalCount); err != nil {
 		return err
 	}
 	if err = oprot.WriteFieldEnd(); err != nil {
@@ -2389,6 +2425,22 @@ WriteFieldBeginError:
 	return thrift.PrependError(fmt.Sprintf("%T write field 9 begin error: ", p), err)
 WriteFieldEndError:
 	return thrift.PrependError(fmt.Sprintf("%T write field 9 end error: ", p), err)
+}
+func (p *BorrowRecord) writeField10(oprot thrift.TProtocol) (err error) {
+	if err = oprot.WriteFieldBegin("late_fee", thrift.DOUBLE, 10); err != nil {
+		goto WriteFieldBeginError
+	}
+	if err := oprot.WriteDouble(p.LateFee); err != nil {
+		return err
+	}
+	if err = oprot.WriteFieldEnd(); err != nil {
+		goto WriteFieldEndError
+	}
+	return nil
+WriteFieldBeginError:
+	return thrift.PrependError(fmt.Sprintf("%T write field 10 begin error: ", p), err)
+WriteFieldEndError:
+	return thrift.PrependError(fmt.Sprintf("%T write field 10 end error: ", p), err)
 }
 
 func (p *BorrowRecord) String() string {

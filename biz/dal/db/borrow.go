@@ -45,6 +45,7 @@ func BookBorrow(ctx context.Context, userId, bookId int64) (int64, error) {
 		br = BorrowRecord{
 			UserID:       userId,
 			BookID:       bookId,
+			Title:        bt.Title,
 			CheckoutDate: time.Now(),
 			DueDate:      time.Now().AddDate(0, 0, constants.DefauteRenewTime),
 			Status:       "checked_out",

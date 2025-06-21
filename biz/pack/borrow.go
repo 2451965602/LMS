@@ -13,6 +13,7 @@ func BuildBorrowRecordResp(info *db.BorrowRecord) *model.BorrowRecord {
 		ID:           info.ID,
 		UserID:       info.UserID,
 		BookID:       info.BookID,
+		Title:        info.Title,
 		CheckoutDate: info.CheckoutDate.Format("2006-01-02 15:04:05"),
 		DueDate:      info.DueDate.Format("2006-01-02 15:04:05"),
 		Status:       info.Status,

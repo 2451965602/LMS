@@ -46,12 +46,13 @@ struct BorrowRecord {
     1: required i64 id
     2: required i64 user_id
     3: required i64 book_id
-    4: required string checkout_date
-    5: required string due_date
-    6: required string return_date
-    7: required string status
-    8: required i64 renewal_count
-    9: required double late_fee
+    4: required string title
+    5: required string checkout_date
+    6: required string due_date
+    7: required string return_date
+    8: required string status
+    9: required i64 renewal_count
+    10: required double late_fee
 }
 
 

@@ -54,6 +54,7 @@ type BorrowRecord struct {
 	ID           int64      `json:"id"             gorm:"primaryKey;autoIncrement"`
 	UserID       int64      `json:"user_id"        gorm:"not null"`
 	BookID       int64      `json:"book_id"        gorm:"not null"`
+	Title        string     `json:"title"            gorm:"type:varchar(100);not null"`
 	CheckoutDate time.Time  `json:"checkout_date"  gorm:"type:timestamp;default:CURRENT_TIMESTAMP"`
 	RenewalCount int64      `json:"renewal_count"  gorm:"type:int;default:0"`
 	DueDate      time.Time  `json:"due_date"       gorm:"type:timestamp;not null"`
@@ -64,18 +65,4 @@ type BorrowRecord struct {
 
 func (BorrowRecord) TableName() string {
 	return constants.BorrowRecordTableName
-}
-
-type Reservation struct {
-	ID          int64     `json:"id"             gorm:"primaryKey;autoIncrement"`
-	UserID      int64     `json:"user_id"        gorm:"not null"`
-	BookID      int64     `json:"book_id"        gorm:"not null"`
-	ISBN        string    `json:"isbn"           gorm:"type:varchar(20);not null"`
-	ReserveDate time.Time `json:"reserve_date"   gorm:"type:timestamp;default:CURRENT_TIMESTAMP"`
-	ExpiryDate  time.Time `json:"expiry_date"    gorm:"type:timestamp;not null"`
-	Status      string    `json:"status"         gorm:"type:enum('pending','fulfilled','cancelled','expired');default:'pending'"`
-}
-
-func (Reservation) TableName() string {
-	return constants.ReservationTableName
 }

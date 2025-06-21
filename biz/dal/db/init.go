@@ -49,5 +49,11 @@ func Init() error {
 	if err = sqlDB.Ping(); err != nil {
 		return errno.Errorf(errno.InternalDatabaseErrorCode, fmt.Sprintf("ping database error: %v", err))
 	}
+
+	err = db.AutoMigrate(&User{}, &BookType{}, &Book{}, &BorrowRecord{})
+	if err != nil {
+		return errno.Errorf(errno.InternalDatabaseErrorCode, fmt.Sprintf("auto migrate error: %v", err))
+	}
+
 	return nil
 }

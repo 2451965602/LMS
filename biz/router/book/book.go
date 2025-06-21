@@ -3,9 +3,8 @@
 package book
 
 import (
-	"github.com/cloudwego/hertz/pkg/app/server"
-
 	book "github.com/2451965602/LMS/biz/handler/book"
+	"github.com/cloudwego/hertz/pkg/app/server"
 )
 
 /*
@@ -22,7 +21,7 @@ func Register(r *server.Hertz) {
 		_book := root.Group("/book", _bookMw()...)
 		_book.POST("/add", append(_addbookMw(), book.AddBook)...)
 		_book.DELETE("/delete", append(_deletebookMw(), book.DeleteBook)...)
-		_book.GET("/get", append(_getbookMw(), book.GetBook)...)
+		_book.GET("/search", append(_getbookMw(), book.GetBook)...)
 		_book.PUT("/update", append(_updatebookMw(), book.UpdateBook)...)
 	}
 }

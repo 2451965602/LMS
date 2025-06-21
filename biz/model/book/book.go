@@ -5,10 +5,8 @@ package book
 import (
 	"context"
 	"fmt"
-
-	"github.com/apache/thrift/lib/go/thrift"
-
 	"github.com/2451965602/LMS/biz/model/model"
+	"github.com/apache/thrift/lib/go/thrift"
 )
 
 type AddBookRequest struct {

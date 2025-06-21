@@ -12,7 +12,7 @@ type User struct {
 	Password     string    `json:"password"      gorm:"type:varchar(255);not null"`
 	Permission   string    `json:"permission"   gorm:"type:enum('admin','librarian','member');default:'member';not null"`
 	Phone        *string   `json:"phone"         gorm:"type:varchar(20)"`
-	RegisterDate time.Time `json:"register_date" gorm:"column:pegister_date;type:timestamp;default:CURRENT_TIMESTAMP;not null"`
+	RegisterDate time.Time `json:"register_date" gorm:"column:register_date;type:timestamp;default:CURRENT_TIMESTAMP;not null"`
 	Status       string    `json:"status"        gorm:"type:enum('active','suspended','inactive');default:'active';not null"`
 }
 

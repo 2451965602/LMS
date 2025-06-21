@@ -48,5 +48,5 @@ service BookService {
     AddBookResponse addBook(1: AddBookRequest req)(api.post="/book/add"),
     UpdateBookResponse updateBook(1: UpdateBookRequest req)(api.put="/book/update"),
     DeleteBookResponse deleteBook(1: DeleteBookRequest req)(api.delete="/book/delete"),
-    GetBookResponse getBook(1: GetBookRequest req)(api.get="/book/get"),
+    GetBookResponse getBook(1: GetBookRequest req)(api.get="/book/search"),
 }

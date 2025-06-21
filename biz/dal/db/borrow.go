@@ -31,7 +31,7 @@ func BookBorrow(ctx context.Context, userId, bookId int64) (int64, error) {
 		}
 
 		if bookInfo.Status != "available" {
-			return errno.Errorf(errno.ServiceActionNotAllowed, "book with id %d is not available (status: %s)", bookId, bookInfo.Status)
+			return errno.Errorf(errno.ServiceBookNotAvailable, "book with id %d is not available (status: %s)", bookId, bookInfo.Status)
 		}
 
 		var bt BookType
@@ -232,6 +232,8 @@ func GetCurrentBorrowRecord(ctx context.Context, userId, pageNum, pageSize, stat
 		baseQuery = baseQuery.Where("status = ?", "overdue")
 	case constants.Lost:
 		baseQuery = baseQuery.Where("status = ?", "lost")
+	case constants.All:
+		// 不添加额外的过滤条件，查询所有状态的记录
 	default:
 		return nil, 0, errno.Errorf(errno.IllegalOperatorCode, "invalid status parameter: %d", status)
 	}

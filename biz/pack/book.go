@@ -15,10 +15,10 @@ func BuildBookResp(info *db.Book) *model.Book {
 		Location:      info.Location,
 		Status:        info.Status,
 		PurchasePrice: info.PurchasePrice,
-		PurchaseDate:  info.PurchaseDate.Format("2006-01-02"),
+		PurchaseDate:  info.PurchaseDate.Format("2006-01-02 15:04:05"),
 	}
 	if info.LastCheckout != nil {
-		result.LastCheckout = info.LastCheckout.Format("2006-01-02")
+		result.LastCheckout = info.LastCheckout.Format("2006-01-02 15:04:05")
 	} else {
 		result.LastCheckout = "" // or some default value
 	}

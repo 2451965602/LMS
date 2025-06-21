@@ -13,14 +13,14 @@ func BuildBorrowRecordResp(info *db.BorrowRecord) *model.BorrowRecord {
 		ID:           info.ID,
 		UserID:       info.UserID,
 		BookID:       info.BookID,
-		CheckoutDate: info.CheckoutDate.Format("2006-01-02"),
-		DueDate:      info.DueDate.Format("2006-01-02"),
+		CheckoutDate: info.CheckoutDate.Format("2006-01-02 15:04:05"),
+		DueDate:      info.DueDate.Format("2006-01-02 15:04:05"),
 		Status:       info.Status,
 		RenewalCount: info.RenewalCount,
 		LateFee:      info.LateFee,
 	}
 	if info.ReturnDate != nil {
-		result.ReturnDate = info.ReturnDate.Format("2006-01-02")
+		result.ReturnDate = info.ReturnDate.Format("2006-01-02 15:04:05")
 	} else {
 		result.ReturnDate = ""
 	}

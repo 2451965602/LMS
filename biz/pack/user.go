@@ -15,6 +15,6 @@ func BuildUserResp(info *db.User) *model.User {
 		Phone:        info.Phone,
 		Status:       info.Status,
 		Permissions:  info.Permission,
-		RegisterDate: info.RegisterDate.Format("2006-01-02"),
+		RegisterDate: info.RegisterDate.Format("2006-01-02 15:04:05"),
 	}
 }

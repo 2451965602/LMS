@@ -8,4 +8,5 @@ const (
 	Returned   = 2
 	Overdue    = 3
 	Lost       = 4
+	All        = 0
 )

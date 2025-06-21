@@ -21,7 +21,7 @@ func GetMysqlDSN() (string, error) {
 	dsn := strings.Join([]string{
 		config.Mysql.Username, ":", config.Mysql.Password, // 用户名和密码
 		"@tcp(", config.Mysql.Addr, ")/", // 数据库地址
-		config.Mysql.Database, "?charset=" + config.Mysql.Charset + "&parseTime=true", // 数据库名称、字符集和解析时间
+		config.Mysql.Database, "?charset=" + config.Mysql.Charset + "&parseTime=true&loc=Local", // 数据库名称、字符集和解析时间
 	}, "")
 
 	return dsn, nil

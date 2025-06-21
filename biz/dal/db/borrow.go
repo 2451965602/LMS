@@ -31,7 +31,7 @@ func BookBorrow(ctx context.Context, userId, bookId int64) (int64, error) {
 		}
 
 		if bookInfo.Status != "available" {
-			return errno.Errorf(errno.ServiceActionNotAllowed, "book with id %d is not available (status: %s)", bookId, bookInfo.Status)
+			return errno.Errorf(errno.ServiceBookNotAvailable, "book with id %d is not available (status: %s)", bookId, bookInfo.Status)
 		}
 
 		var bt BookType

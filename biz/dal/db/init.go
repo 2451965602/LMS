@@ -3,6 +3,7 @@ package db
 import (
 	"context"
 	"fmt"
+	"github.com/2451965602/LMS/pkg/crypt"
 
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
@@ -55,5 +56,36 @@ func Init() error {
 		return errno.Errorf(errno.InternalDatabaseErrorCode, fmt.Sprintf("auto migrate error: %v", err))
 	}
 
+	exist, err := IsUserExist(context.Background(), "admin")
+	if !exist {
+		err := createAdminUser()
+		if err != nil {
+			return err
+		}
+	}
+
+	return nil
+}
+
+func createAdminUser() error {
+	hashedPassword, err := crypt.PasswordHash("admin")
+	if err != nil {
+		return errno.Errorf(errno.InternalPasswordCryptErrorCode, "encrypt password failed: %v", err)
+	}
+
+	u := User{
+		Name:       "admin",
+		Password:   hashedPassword,
+		Permission: "admin",
+		Status:     "active",
+	}
+
+	err = db.WithContext(context.Background()).
+		Table(User{}.TableName()).
+		Create(&u).
+		Error
+	if err != nil {
+		return errno.Errorf(errno.InternalDatabaseErrorCode, "create user failed: %v (possible duplicate username '%s')", err, "admin")
+	}
 	return nil
 }

@@ -276,7 +276,7 @@ func AdminDeleteUser(ctx context.Context, userId int64) error {
 	err := db.WithContext(ctx).
 		Table(User{}.TableName()).
 		Where("id = ?", userId).
-		Select("id", "permissions").
+		Select("id", "permission").
 		First(&userToDelete).Error
 	if err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {

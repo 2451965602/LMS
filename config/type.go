@@ -14,9 +14,13 @@ type mySQL struct {
 	Password string `yaml:"password"` // 数据库密码
 	Charset  string `yaml:"charset"`  // 数据库字符集
 }
+type maxBorrowNum struct {
+	Num int64 `yaml:"Num"`
+}
 
 // config 用于存储整个配置信息
 type config struct {
-	Server server `yaml:"server"` // 服务器配置
-	MySQL  mySQL  `yaml:"mysql"`  // MySQL数据库配置
+	Server       server       `yaml:"server"` // 服务器配置
+	MySQL        mySQL        `yaml:"mysql"`  // MySQL数据库配置
+	maxBorrowNum maxBorrowNum `yaml:"maxBorrowNum"`
 }

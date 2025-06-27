@@ -76,7 +76,7 @@ func createDefaultConfig(configPath string) error {
 	v := viper.New()
 	v.Set("server", defaultConfig.Server)
 	v.Set("mysql", defaultConfig.MySQL)
-	v.Set("maxBorrowNum", defaultConfig.maxBorrowNum.MaxBorrowNum)
+	v.Set("maxBorrowNum", defaultConfig.maxBorrowNum.Num)
 
 	return v.WriteConfigAs(configPath) // 将默认配置写入指定路径
 }

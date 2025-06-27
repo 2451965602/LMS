@@ -2,7 +2,8 @@ package service
 
 import (
 	"context"
-
+	"github.com/2451965602/LMS/config"
+	"github.com/2451965602/LMS/pkg/errno"
 	"github.com/cloudwego/hertz/pkg/app"
 
 	"github.com/2451965602/LMS/biz/dal/db"
@@ -36,6 +37,13 @@ func (s *BorrowService) BookBorrow(ctx context.Context, req borrow.BorrowRequest
 	userId, err := contextLogin.GetLoginData(ctx) // 从上下文中获取当前登录用户ID
 	if err != nil {
 		return -1, err
+	}
+	_, count, err := db.GetCurrentBorrowRecord(ctx, userId, 1, 1, 1)
+	if err != nil {
+		return -1, err
+	}
+	if count >= config.MaxBorrowNum.Num {
+		return -1, errno.Errorf(errno.ServiceBorrowNumOver, "can't borrow more")
 	}
 
 	borrowId, err := db.BookBorrow(ctx, userId, req.BookID) // 调用数据库操作函数记录借书信息

@@ -10,8 +10,9 @@ import (
 )
 
 var (
-	Server       *server      // 服务器配置的全局变量
-	Mysql        *mySQL       // MySQL数据库配置的全局变量
+	Server       *server // 服务器配置的全局变量
+	Mysql        *mySQL  // MySQL数据库配置的全局变量
+	MaxBorrowNum *maxBorrowNum
 	runtimeViper *viper.Viper // Viper实例，用于管理配置文件
 )
 
@@ -66,12 +67,16 @@ func createDefaultConfig(configPath string) error {
 			Password: "root",           // 默认数据库密码
 			Charset:  "utf8mb4",        // 默认数据库字符集
 		},
+		maxBorrowNum: maxBorrowNum{
+			Num: 5,
+		},
 	}
 
 	// 使用Viper将默认配置写入文件
 	v := viper.New()
 	v.Set("server", defaultConfig.Server)
 	v.Set("mysql", defaultConfig.MySQL)
+	v.Set("maxBorrowNum", defaultConfig.maxBorrowNum.MaxBorrowNum)
 
 	return v.WriteConfigAs(configPath) // 将默认配置写入指定路径
 }
@@ -86,4 +91,5 @@ func configMapping() {
 	// 将配置对象的值赋给全局变量
 	Server = &c.Server
 	Mysql = &c.MySQL
+	MaxBorrowNum = &c.MaxBorrowNum
 }

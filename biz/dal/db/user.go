@@ -324,7 +324,7 @@ func IsPermission(ctx context.Context, userId int64, requiredPermission string) 
 	err := db.WithContext(ctx).
 		Table(User{}.TableName()).
 		Where("id = ?", userId).
-		Select("permissions").
+		Select("permission").
 		First(&u).
 		Error
 	if err != nil {
